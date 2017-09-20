@@ -8,7 +8,10 @@ namespace Completed
 	//Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 	public class Player : MovingObject
 	{
-		public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
+        public GameObject[] HudVidas;
+        public int vidas = 3;
+
+        public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
 		public int pointsPerFood = 10;				//Number of points to add to player food points when picking up a food object.
 		public int pointsPerSoda = 20;				//Number of points to add to player food points when picking up a soda object.
 		public int wallDamage = 1;					//How much damage a player does to a wall when chopping it.
@@ -131,7 +134,7 @@ namespace Completed
 		protected override void AttemptMove <T> (int xDir, int yDir)
 		{
 			//Every time player moves, subtract from food points total.
-			food--;
+			//food--;
 			
 			//Update food text display to reflect current score.
 			foodText.text = "Food: " + food;
@@ -150,7 +153,7 @@ namespace Completed
 			}
 			
 			//Since the player has moved and lost food points, check if the game has ended.
-			CheckIfGameOver ();
+			//CheckIfGameOver ();
 			
 			//Set the playersTurn boolean of GameManager to false now that players turn is over.
 			GameManager.instance.playersTurn = false;
@@ -236,13 +239,27 @@ namespace Completed
 			animator.SetTrigger ("playerHit");
 			
 			//Subtract lost food points from the players total.
-			food -= loss;
+			//food -= loss;
+            vidas--;
 			
 			//Update the food display with the new total.
 			foodText.text = "-"+ loss + " Food: " + food;
-			
-			//Check to see if game has ended.
-			CheckIfGameOver ();
+
+            if (vidas == 2)
+            {
+                HudVidas[2].SetActive(false);
+            }
+            else if (vidas == 1)
+            {
+                HudVidas[1].SetActive(false);
+            }
+            else if(vidas == 0)
+            {
+                HudVidas[0].SetActive(false);
+                CheckIfGameOver();
+            }
+
+            //Check to see if game has ended.
 		}
 		
 		
@@ -250,8 +267,8 @@ namespace Completed
 		private void CheckIfGameOver ()
 		{
 			//Check if food point total is less than or equal to zero.
-			if (food <= 0) 
-			{
+			/*if (food <= 0) 
+			{*/
 				//Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
 				SoundManager.instance.PlaySingle (gameOverSound);
 				
@@ -260,7 +277,7 @@ namespace Completed
 				
 				//Call the GameOver function of GameManager.
 				GameManager.instance.GameOver ();
-			}
+			//}
 		}
 	}
 }
