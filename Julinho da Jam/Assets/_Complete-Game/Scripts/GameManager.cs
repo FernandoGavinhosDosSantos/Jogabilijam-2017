@@ -8,17 +8,24 @@ namespace Completed
 	using UnityEngine.UI;					//Allows us to use UI.
 	
 	public class GameManager : MonoBehaviour
-	{
-		public float levelStartDelay = 2f;						//Time to wait before starting level, in seconds.
+    {
+        public const int IARA = 0;
+        public const int SACI = 1;
+        public const int CURUPIRA = 2;
+        public const int CORPO_SECO = 3;
+
+        public float levelStartDelay = 2f;						//Time to wait before starting level, in seconds.
 		public float turnDelay = 0.1f;							//Delay between each Player turn.
 		public int playerFoodPoints = 100;						//Starting value for Player food points.
 		public static GameManager instance = null;				//Static instance of GameManager which allows it to be accessed by any other script.
 		[HideInInspector] public bool playersTurn = true;		//Boolean to check if it's players turn, hidden in inspector but public.
+		public BoardManager boardScript;						//Store a reference to our BoardManager which will set up the level.
+        public GameObject Iara;
+        public bool[] activeSummons = new bool[] { false, false, false, false };
 		
 		
 		private Text levelText;									//Text to display current level number.
 		private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.
-		private BoardManager boardScript;						//Store a reference to our BoardManager which will set up the level.
 		private int level = 1;									//Current level number, expressed in game as "Day 1".
 		private List<Enemy> enemies;							//List of all Enemy units, used to issue them move commands.
 		private bool enemiesMoving;								//Boolean to check if enemies are moving.
@@ -123,6 +130,16 @@ namespace Completed
 			//Start moving enemies.
 			StartCoroutine (MoveEnemies ());
 		}
+
+        public void IarasCharm(int turns, GameObject newTarget)
+        {
+            this.Iara = newTarget;
+            
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].Charm(turns, newTarget.transform);
+            }
+        }
 		
 		//Call this to add the passed in Enemy to the List of Enemy objects.
 		public void AddEnemyToList(Enemy script)

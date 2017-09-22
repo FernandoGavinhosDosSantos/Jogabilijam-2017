@@ -36,6 +36,7 @@ namespace Completed
 		public GameObject[] foodTiles;									//Array of food prefabs.
 		public GameObject[] enemyTiles;									//Array of enemy prefabs.
 		public GameObject[] outerWallTiles;								//Array of outer tile prefabs.
+        public GameObject[] SummonTiles;
 		
 		private Transform boardHolder;									//A variable to store a reference to the transform of our Board object.
 		private List <Vector3> gridPositions = new List <Vector3> ();	//A list of possible locations to place tiles.
@@ -48,10 +49,10 @@ namespace Completed
 			gridPositions.Clear ();
 			
 			//Loop through x axis (columns).
-			for(int x = 1; x < columns-1; x++)
+			for(int x = 0; x < columns; x++)
 			{
 				//Within each column, loop through y axis (rows).
-				for(int y = 1; y < rows-1; y++)
+				for(int y = 0; y < rows; y++)
 				{
 					//At each index add a new Vector3 to our list with the x and y coordinates of that position.
 					gridPositions.Add (new Vector3(x, y, 0f));
@@ -88,10 +89,21 @@ namespace Completed
 				}
 			}
 		}
+
+        public GameObject Summon(int creature, Vector3 position)
+        {
+            foreach (Vector3 pos in gridPositions)
+            {
+                if (pos.Equals(position))
+                    return Instantiate(SummonTiles[creature], position, Quaternion.identity);
+            }
+
+            return null;
+        }
 		
 		
 		//RandomPosition returns a random position from our list gridPositions.
-		Vector3 RandomPosition ()
+		Vector3 RandomPosition (bool enemy)
 		{
 			//Declare an integer randomIndex, set it's value to a random number between 0 and the count of items in our List gridPositions.
 			int randomIndex = Random.Range (0, gridPositions.Count);
@@ -100,7 +112,7 @@ namespace Completed
 			Vector3 randomPosition = gridPositions[randomIndex];
 			
 			//Remove the entry at randomIndex from the list so that it can't be re-used.
-			gridPositions.RemoveAt (randomIndex);
+			if (!enemy) gridPositions.RemoveAt (randomIndex);
 			
 			//Return the randomly selected Vector3 position.
 			return randomPosition;
@@ -108,7 +120,7 @@ namespace Completed
 		
 		
 		//LayoutObjectAtRandom accepts an array of game objects to choose from along with a minimum and maximum range for the number of objects to create.
-		void LayoutObjectAtRandom (GameObject[] tileArray, int minimum, int maximum)
+		void LayoutObjectAtRandom (GameObject[] tileArray, int minimum, int maximum, bool enemy)
 		{
 			//Choose a random number of objects to instantiate within the minimum and maximum limits
 			int objectCount = Random.Range (minimum, maximum+1);
@@ -117,7 +129,7 @@ namespace Completed
 			for(int i = 0; i < objectCount; i++)
 			{
 				//Choose a position for randomPosition by getting a random position from our list of available Vector3s stored in gridPosition
-				Vector3 randomPosition = RandomPosition();
+				Vector3 randomPosition = RandomPosition(enemy);
 				
 				//Choose a random tile from tileArray and assign it to tileChoice
 				GameObject tileChoice = tileArray[Random.Range (0, tileArray.Length)];
@@ -126,10 +138,9 @@ namespace Completed
 				Instantiate(tileChoice, randomPosition, Quaternion.identity);
 			}
 		}
-		
-		
-		//SetupScene initializes our level and calls the previous functions to lay out the game board
-		public void SetupScene (int level)
+
+        //SetupScene initializes our level and calls the previous functions to lay out the game board
+        public void SetupScene (int level)
 		{
 			//Creates the outer walls and floor.
 			BoardSetup ();
@@ -138,16 +149,16 @@ namespace Completed
 			InitialiseList ();
 			
 			//Instantiate a random number of wall tiles based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum);
+			LayoutObjectAtRandom (wallTiles, wallCount.minimum, wallCount.maximum, false);
 			
 			//Instantiate a random number of food tiles based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);
+			//LayoutObjectAtRandom (foodTiles, foodCount.minimum, foodCount.maximum);
 			
 			//Determine number of enemies based on current level number, based on a logarithmic progression
 			int enemyCount = (int)Mathf.Log(level, 2f);
 			
 			//Instantiate a random number of enemies based on minimum and maximum, at randomized positions.
-			LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount);
+			LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount, true);
 			
 			//Instantiate the exit tile in the upper right hand corner of our game board
 			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);

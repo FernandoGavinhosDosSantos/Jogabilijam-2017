@@ -45,6 +45,8 @@ MonoBehaviour:
   turnDelay: 0.1
   playerFoodPoints: 100
   playersTurn: 1
+  boardScript: {fileID: 0}
+  Iara: {fileID: 0}
 --- !u!114 &11433658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -93,6 +95,15 @@ MonoBehaviour:
   - {fileID: 110520, guid: 7094f72151ec74f569c4e03f1ec0f8e7, type: 2}
   - {fileID: 110520, guid: b0ace21a29149403094422fb3bd96aa9, type: 2}
   - {fileID: 110520, guid: e85c94355cc4641da919bd5d0ac956d4, type: 2}
+  SummonTiles:
+  - {fileID: 1684244155932384, guid: e7f8024ccae18004885ca4f3daa2d333, type: 2}
+  - {fileID: 1684244155932384, guid: e7f8024ccae18004885ca4f3daa2d333, type: 2}
+  - {fileID: 1684244155932384, guid: e7f8024ccae18004885ca4f3daa2d333, type: 2}
+  - {fileID: 1684244155932384, guid: e7f8024ccae18004885ca4f3daa2d333, type: 2}
+  - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
+  - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
+  - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
+  - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

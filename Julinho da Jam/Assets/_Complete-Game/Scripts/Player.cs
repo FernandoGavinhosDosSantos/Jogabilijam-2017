@@ -7,7 +7,7 @@ namespace Completed
 {
 	//Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 	public class Player : MovingObject
-	{
+    {
         public GameObject[] HudVidas;
         public int vidas = 3;
 
@@ -26,16 +26,27 @@ namespace Completed
 		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 		private int food;                           //Used to store player food points total during level.
+
+        private int[,] iaraSummonArea;
+
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
-		
-		
-		//Start overrides the Start function of MovingObject
-		protected override void Start ()
+
+
+        //Start overrides the Start function of MovingObject
+        protected override void Start ()
 		{
-			//Get a component reference to the Player's animator component
-			animator = GetComponent<Animator>();
+            iaraSummonArea = new int[5, 5] {
+                { 0, 0, 1, 0, 0 },
+                { 0, 1, 1, 1, 0 },
+                { 1, 1, 2, 1, 1 },
+                { 0, 1, 1, 1, 0 },
+                { 0, 0, 1, 0, 0 },
+            };
+
+            //Get a component reference to the Player's animator component
+            animator = GetComponent<Animator>();
 			
 			//Get the current food point total stored in GameManager.instance between levels.
 			food = GameManager.instance.playerFoodPoints;
@@ -60,15 +71,18 @@ namespace Completed
 		{
 			//If it's not the player's turn, exit the function.
 			if(!GameManager.instance.playersTurn) return;
-			
-			int horizontal = 0;  	//Used to store the horizontal move direction.
-			int vertical = 0;		//Used to store the vertical move direction.
-			
-			//Check if we are running either in the Unity editor or in a standalone build.
+
+            int horizontal = 0;  	//Used to store the horizontal move direction.
+			int vertical = 0;       //Used to store the vertical move direction.
+
+            //Check if we are running either in the Unity editor or in a standalone build.
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
-			
-			//Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
-			horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
+
+            //Summons Iara
+            if (Input.GetKeyDown(KeyCode.Alpha1)) Summon(iaraSummonArea, GameManager.IARA);
+
+            //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
+            horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
 			
 			//Get input from the input manager, round it to an integer and store in vertical to set y axis move direction
 			vertical = (int) (Input.GetAxisRaw ("Vertical"));
@@ -128,6 +142,24 @@ namespace Completed
 				AttemptMove<Wall> (horizontal, vertical);
 			}
 		}
+
+        private void Summon(int[,] summonArea, int summonId)
+        {
+            if (!GameManager.instance.activeSummons[summonId])
+            {
+                for (int i = 0; i < summonArea.GetLength(0); i++)
+                {
+                    for (int j = 0; j < summonArea.GetLength(1); j++)
+                    {
+                        if (summonArea[i, j] == 1)
+                        {
+                            Vector3 SummonPos = new Vector3(transform.position.x - 2 + i, transform.position.y - 2 + j);
+                            GameManager.instance.boardScript.Summon(summonId, SummonPos);
+                        }
+                    }
+                }
+            }
+        }
 		
 		//AttemptMove overrides the AttemptMove function in the base class MovingObject
 		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
