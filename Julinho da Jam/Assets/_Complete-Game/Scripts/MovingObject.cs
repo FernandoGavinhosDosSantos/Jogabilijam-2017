@@ -7,10 +7,12 @@ namespace Completed
 	public abstract class MovingObject : MonoBehaviour
 	{
 		public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
-		public LayerMask blockingLayer;			//Layer on which collision will be checked.
-		
-		
-		private BoxCollider2D boxCollider; 		//The BoxCollider2D component attached to this object.
+		public LayerMask blockingLayer;         //Layer on which collision will be checked.
+        public LayerMask OutterWall;
+        RaycastHit2D hitParede;
+
+
+        private BoxCollider2D boxCollider; 		//The BoxCollider2D component attached to this object.
 		private Rigidbody2D rb2D;				//The Rigidbody2D component attached to this object.
 		private float inverseMoveTime;			//Used to make movement more efficient.
 		
@@ -43,23 +45,33 @@ namespace Completed
 			boxCollider.enabled = false;
 			
 			//Cast a line from start point to end point checking collision on blockingLayer.
-			hit = Physics2D.Linecast (start, end, blockingLayer);
-			
-			//Re-enable boxCollider after linecast
-			boxCollider.enabled = true;
-			
-			//Check if anything was hit
-			if(hit.transform == null)
-			{
-				//If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-				StartCoroutine (SmoothMovement (end));
-				
-				//Return true to say that Move was successful
-				return true;
-			}
-			
-			//If something was hit, return false, Move was unsuccesful.
-			return false;
+			hit = Physics2D.Linecast(start, end, blockingLayer);
+            hitParede = Physics2D.Linecast(start, end, OutterWall);
+
+            //Re-enable boxCollider after linecast
+            boxCollider.enabled = true;
+
+            //Check if anything was hit
+            if (hitParede.transform == null)
+            {
+                if (hit.transform == null)
+                {
+                    //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
+                    StartCoroutine(SmoothMovement(end));
+
+                    if (this.gameObject.tag == "Player")
+                    {
+                    //Set the playersTurn boolean of GameManager to false now that players turn is over.
+                    GameManager.instance.playersTurn = false;
+                    }
+
+                    //Return true to say that Move was successful
+                    return true;
+                }
+            }
+
+            //If something was hit, return false, Move was unsuccesful.
+            return false;
 		}
 		
 		

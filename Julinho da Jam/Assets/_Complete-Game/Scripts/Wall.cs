@@ -37,6 +37,9 @@ namespace Completed
 			if(hp <= 0)
 				//Disable the gameObject.
 				gameObject.SetActive (false);
-		}
+
+            //Set the playersTurn boolean of GameManager to false now that players turn is over.
+            GameManager.instance.playersTurn = false;
+        }
 	}
 }
