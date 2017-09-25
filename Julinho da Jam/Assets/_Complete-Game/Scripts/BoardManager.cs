@@ -90,12 +90,12 @@ namespace Completed
 			}
 		}
 
-        public GameObject Summon(int creature, Vector3 position)
+        public GameObject Summon(int summonId, Vector3 position)
         {
             foreach (Vector3 pos in gridPositions)
             {
                 if (pos.Equals(position))
-                    return Instantiate(SummonTiles[creature], position, Quaternion.identity);
+                    return Instantiate(SummonTiles[summonId], position, Quaternion.identity);
             }
 
             return null;

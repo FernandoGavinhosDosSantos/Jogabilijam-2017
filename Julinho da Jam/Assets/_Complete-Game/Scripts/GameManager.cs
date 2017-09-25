@@ -11,8 +11,9 @@ namespace Completed
     {
         public const int IARA = 0;
         public const int SACI = 1;
-        public const int CURUPIRA = 2;
+        public const int BOITATA = 2;
         public const int CORPO_SECO = 3;
+        public const int S_AREA = 4;
 
         public float levelStartDelay = 2f;						//Time to wait before starting level, in seconds.
 		public float turnDelay = 0.1f;							//Delay between each Player turn.
@@ -23,6 +24,7 @@ namespace Completed
         public BoardManager boardScript;						//Store a reference to our BoardManager which will set up the level.
         public GameObject Iara;
         public bool[] activeSummons = new bool[] { false, false, false, false };
+        public int summonId = -1;
 		
 		
 		private Text levelText;									//Text to display current level number.
@@ -132,6 +134,11 @@ namespace Completed
 			//Start moving enemies.
 			StartCoroutine (MoveEnemies ());
 		}
+
+        public bool NoActiveSummons()
+        {
+            return !(activeSummons[IARA] || activeSummons[BOITATA] || activeSummons[SACI] || activeSummons[CORPO_SECO]);
+        }
 
         public void IarasCharm(int turns, GameObject newTarget)
         {

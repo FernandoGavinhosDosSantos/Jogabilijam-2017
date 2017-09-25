@@ -33,25 +33,26 @@ namespace Completed
 
         private void Update()
         {
-                        Delay += Time.deltaTime;
+            Delay += Time.deltaTime;
 			if(Delay <= 0.2) return;
 
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (Input.GetAxis("Confirm") > 0)
             {
-                GameObject iara = GameManager.instance.boardScript.Summon(4, transform.position);
-                GameManager.instance.IarasCharm(5, iara);
-                Destroy(gameObject);
+                GameObject summon = GameManager.instance.boardScript.Summon(GameManager.instance.summonId, transform.position);
+                if (summon)
+                {
+                    Player.selecionando = false;
+                    if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(5, summon);
+                    GameManager.instance.playersTurn = false;
+                    GameManager.instance.summonId = -1;
+                    Destroy(gameObject);
+                }
             }
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetAxis("Cancel") > 0)
             {
-                Player.selecionado = false;
-                GameObject iara = GameManager.instance.boardScript.Summon(4, transform.position);
-                GameManager.instance.IarasCharm(5, iara);
-                Destroy(gameObject);
-            }
-            if (Input.GetMouseButtonDown(1))
-            {
-                Player.selecionado = false;
+                GameManager.instance.activeSummons[GameManager.instance.summonId] = false;
+                Player.selecionando = false;
+                GameManager.instance.summonId = -1;
                 Destroy(gameObject);
             }
 
