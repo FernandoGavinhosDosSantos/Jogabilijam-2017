@@ -10,7 +10,7 @@ namespace Completed
     {
         public GameObject[] HudVidas;
         public int vidas = 3;
-        public static bool selecionado = false;
+        public static bool selecionando = false;
         public GameObject Marca;
 
         public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
@@ -25,24 +25,37 @@ namespace Completed
 		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 
-        private int[,] iaraSummonArea;
+        private int[,] iaraSummonArea = new int[15, 15] {
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        };
+        private int[,] corpoSecoSummonArea = new int[3, 3] {
+                { 1, 1, 1},
+                { 1, 2, 1},
+                { 1, 1, 1},
+            };
 
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
 
 
-        //Start overrides the Start function of MovingObject
-        protected override void Start ()
-		{
-            iaraSummonArea = new int[5, 5] {
-                { 0, 0, 1, 0, 0 },
-                { 0, 1, 1, 1, 0 },
-                { 1, 1, 2, 1, 1 },
-                { 0, 1, 1, 1, 0 },
-                { 0, 0, 1, 0, 0 },
-            };
-
+    //Start overrides the Start function of MovingObject
+    protected override void Start ()
+        {
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
 			
@@ -62,18 +75,14 @@ namespace Completed
             //Check if we are running either in the Unity editor or in a standalone build.
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
 
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if (Input.GetAxis("Iara") > 0 && !selecionando)
             {
-                if(selecionado == false)
-                {
-                        Summon(iaraSummonArea, GameManager.IARA);      
-                }
-                else
-                {
-                    selecionado = false;
-                }
+                Summon(iaraSummonArea, GameManager.IARA, false);
             }
-
+            if (Input.GetAxis("Boitatá") > 0 && !selecionando)
+            {
+                Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
+            }
 
             //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
             horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
@@ -131,25 +140,29 @@ namespace Completed
 			//Check if we have a non-zero value for horizontal or vertical
 			if(horizontal != 0 || vertical != 0)
 			{
-                if (selecionado == false)
+                if (selecionando == false)
                     AttemptMove<Wall>(horizontal, vertical);
             }
 		}
 
-        private void Summon(int[,] summonArea, int summonId)
+        private void Summon(int[,] summonArea, int summonId, bool excecao)
         {
-            if (!GameManager.instance.activeSummons[summonId])
+            if (!selecionando && (!GameManager.instance.activeSummons[summonId] || excecao))
             {
+                selecionando = true;
+                GameManager.instance.activeSummons[summonId] = true;
+                GameManager.instance.summonId = summonId;
                 Instantiate(Marca, new Vector2(this.transform.position.x, this.transform.position.y), Quaternion.identity);
-                selecionado = true;
+
                 for (int i = 0; i < summonArea.GetLength(0); i++)
                 {
                     for (int j = 0; j < summonArea.GetLength(1); j++)
                     {
                         if (summonArea[i, j] == 1)
                         {
-                            Vector3 SummonPos = new Vector3(transform.position.x - 2 + i, transform.position.y - 2 + j);
-                            GameManager.instance.boardScript.Summon(summonId, SummonPos);
+                            int dif = summonArea.GetLength(0) / 2;
+                            Vector3 SummonPos = new Vector3(transform.position.x - dif + i, transform.position.y - dif + j);
+                            GameManager.instance.boardScript.Summon(GameManager.S_AREA, SummonPos);
                         }
                     }
                 }

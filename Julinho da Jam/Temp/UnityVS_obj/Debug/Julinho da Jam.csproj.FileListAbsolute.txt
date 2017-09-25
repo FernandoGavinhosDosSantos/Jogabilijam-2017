@@ -1,0 +1,23 @@
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\Assembly-CSharp.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\Assembly-CSharp.pdb
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\nunit.framework.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEditor.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.HoloLens.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.Networking.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.TestRunner.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.Timeline.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEditor.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.Networking.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.TestRunner.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\nunit.framework.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.Timeline.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.Analytics.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_bin\Debug\UnityEngine.HoloLens.xml
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_obj\Debug\Julinho da Jam.csprojResolveAssemblyReference.cache
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_obj\Debug\Assembly-CSharp.dll
+C:\Users\s_fer\Documents\projetos\Jogabilijam\Unity\Jogabilijam-2017\Julinho da Jam\Temp\UnityVS_obj\Debug\Assembly-CSharp.pdb
