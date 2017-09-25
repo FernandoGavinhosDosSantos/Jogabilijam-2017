@@ -316,6 +316,14 @@ Prefab:
       propertyPath: HudVidas.Array.data[2]
       value: 
       objectReference: {fileID: 2021621731}
+    - target: {fileID: 11446652, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
+      propertyPath: Parede.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 146652, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
   m_IsPrefabParent: 0
@@ -425,7 +433,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.37912998, y: 0}
   m_AnchorMax: {x: 0.41925994, y: 0.10325767}
-  m_AnchoredPosition: {x: 0.099998474, y: -0.47999573}
+  m_AnchoredPosition: {x: 0.1000061, y: -0.47999573}
   m_SizeDelta: {x: -0.44000244, y: -0.8800001}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &672576956

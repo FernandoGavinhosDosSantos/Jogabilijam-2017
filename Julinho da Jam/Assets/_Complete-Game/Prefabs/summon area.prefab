@@ -22,8 +22,8 @@ GameObject:
   - component: {fileID: 212784324711674182}
   - component: {fileID: 114681896948546500}
   - component: {fileID: 50035325187480254}
-  - component: {fileID: 61502741632816968}
-  m_Layer: 0
+  - component: {fileID: 61098609724870826}
+  m_Layer: 10
   m_Name: summon area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -63,7 +63,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!61 &61502741632816968
+--- !u!61 &61098609724870826
 BoxCollider2D:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 847cf4bfdb0cdff42866605d43e0755e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Highlight: {fileID: 1168411670208886, guid: dad8247404dc8d4499d2808c302c0d17, type: 2}
 --- !u!212 &212784324711674182
 SpriteRenderer:
   m_ObjectHideFlags: 1
