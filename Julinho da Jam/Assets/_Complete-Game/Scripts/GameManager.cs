@@ -9,6 +9,8 @@ namespace Completed
 	
 	public class GameManager : MonoBehaviour
     {
+        public Player player;
+
         public const int IARA = 0;
         public const int SACI = 1;
         public const int BOITATA = 2;
@@ -134,6 +136,11 @@ namespace Completed
 			//Start moving enemies.
 			StartCoroutine (MoveEnemies ());
 		}
+
+        public void SetPlayer(Player player)
+        {
+            this.player = player;
+        }
 
         public bool NoActiveSummons()
         {

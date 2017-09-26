@@ -2,6 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;	//Allows us to use UI.
 using UnityEngine.SceneManagement;
+using System;
 
 namespace Completed
 {
@@ -10,6 +11,9 @@ namespace Completed
     {
         public GameObject[] HudVidas;
         public int vidas = 3;
+        public GameObject[] HudMana;
+        public int mana = 3;
+
         public static bool selecionando = false;
         public GameObject Marca;
 
@@ -58,7 +62,9 @@ namespace Completed
         {
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
-			
+
+            GameManager.instance.SetPlayer(this);
+
 			//Call the Start function of the MovingObject base class.
 			base.Start ();
 		}
@@ -141,13 +147,16 @@ namespace Completed
 			if(horizontal != 0 || vertical != 0)
 			{
                 if (selecionando == false)
+                {
                     AttemptMove<Wall>(horizontal, vertical);
+                    AttemptMove<Enemy>(horizontal, vertical);
+                }
             }
 		}
 
         private void Summon(int[,] summonArea, int summonId, bool excecao)
         {
-            if (!selecionando && (!GameManager.instance.activeSummons[summonId] || excecao))
+            if (mana > 0 && !selecionando && (!GameManager.instance.activeSummons[summonId] || excecao))
             {
                 selecionando = true;
                 GameManager.instance.activeSummons[summonId] = true;
@@ -192,12 +201,21 @@ namespace Completed
 		//It takes a generic parameter T which in the case of Player is a Wall which the player can attack and destroy.
 		protected override void OnCantMove <T> (T component)
 		{
-			//Set hitWall to equal the component passed in as a parameter.
-			Wall hitWall = component as Wall;
-			
-			//Call the DamageWall function of the Wall we are hitting.
-			hitWall.DamageWall (wallDamage);
-			
+            Type paramType = typeof(T);
+
+            if (paramType.Equals(typeof(Wall)))
+            {
+                //Set hitWall to equal the component passed in as a parameter.
+                Wall hitWall = component as Wall;
+
+                //Call the DamageWall function of the Wall we are hitting.
+                hitWall.DamageWall(wallDamage);
+            }
+            else if (paramType.Equals(typeof(Enemy)))
+            {
+                Enemy hitEnemy = component as Enemy;
+                hitEnemy.Damage(1);
+            }
 			//Set the attack trigger of the player's animation controller in order to play the player's attack animation.
 			animator.SetTrigger ("playerChop");
 		}
@@ -257,7 +275,27 @@ namespace Completed
             //Check to see if game has ended.
 		}
 		
-		
+		public void loseMana(int loss)
+        {
+            mana--;
+
+            //Update the food display with the new total.
+            //foodText.text = "-"+ loss + " Food: " + food;
+
+            if (mana == 2)
+            {
+                HudMana[2].SetActive(false);
+            }
+            else if (mana == 1)
+            {
+                HudMana[1].SetActive(false);
+            }
+            else if (mana == 0)
+            {
+                HudMana[0].SetActive(false);
+            }
+        }
+
 		//CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 		private void CheckIfGameOver ()
 		{

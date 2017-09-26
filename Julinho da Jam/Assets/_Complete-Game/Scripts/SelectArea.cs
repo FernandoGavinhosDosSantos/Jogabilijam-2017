@@ -45,6 +45,7 @@ namespace Completed
                     if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(5, summon);
                     GameManager.instance.playersTurn = false;
                     GameManager.instance.summonId = -1;
+                    GameManager.instance.player.loseMana(1);
                     Destroy(gameObject);
                 }
             }

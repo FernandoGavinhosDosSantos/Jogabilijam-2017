@@ -11,6 +11,7 @@ namespace Completed
 		public AudioClip attackSound2;						//Second of two audio clips to play when attacking the player.
         public int charmed;
 
+        private int hp;
         private bool trapped;
         private bool male;                                  //bool var that says if this unit is male or not (used in Iara's hability)
 		private Animator animator;							//Variable of type Animator to store a reference to the enemy's Animator component.
@@ -21,6 +22,7 @@ namespace Completed
 		//Start overrides the virtual Start function of the base class.
 		protected override void Start ()
 		{
+            this.hp = 2;
             this.male = true;
             this.charmed = 0;
 			//Register this enemy with our instance of GameManager by adding it to a list of Enemy objects. 
@@ -77,6 +79,22 @@ namespace Completed
             Destroy(GameManager.instance.Iara);
             //inLoveSprite.inactivate(); **aguardando sprite**
         }
+
+        public void Die()
+        {
+            Debug.Log("inimigo: ggwp");
+            animator.SetTrigger("enemyDeath");
+            trapped = true;
+        }
+
+        public void Damage(int dmg)
+        {
+            hp -= dmg;
+            if (hp <= 0) Die();
+
+            //Set the playersTurn boolean of GameManager to false now that players turn is over.
+            GameManager.instance.playersTurn = false;
+        }
 		
 		//MoveEnemy is called by the GameManger each turn to tell each Enemy to try to move towards the player.
 		public void MoveEnemy ()
@@ -104,7 +122,6 @@ namespace Completed
 			AttemptMove <Player> (xDir, yDir);
 		}
 		
-		
 		//OnCantMove is called if Enemy attempts to move into a space occupied by a Player, it overrides the OnCantMove function of MovingObject 
 		//and takes a generic parameter T which we use to pass in the component we expect to encounter, in this case Player
 		protected override void OnCantMove <T> (T component)
@@ -129,9 +146,7 @@ namespace Completed
         {
             if (collision.tag.Equals("CorpoSeco"))
             {
-                Debug.Log("inimigo: ggwp");
-                animator.SetTrigger("enemyDeath");
-                trapped = true;
+                Die();
                 Destroy(collision.gameObject);
             }
         }
