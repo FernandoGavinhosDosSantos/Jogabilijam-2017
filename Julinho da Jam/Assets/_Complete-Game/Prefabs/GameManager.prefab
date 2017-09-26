@@ -49,6 +49,7 @@ MonoBehaviour:
   boardScript: {fileID: 0}
   Iara: {fileID: 0}
   activeSummons: 00000000
+  summonId: -1
 --- !u!114 &11433658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -91,14 +92,11 @@ MonoBehaviour:
   - {fileID: 110520, guid: b0ace21a29149403094422fb3bd96aa9, type: 2}
   - {fileID: 110520, guid: e85c94355cc4641da919bd5d0ac956d4, type: 2}
   SummonTiles:
-  - {fileID: 1460986569078178, guid: b7a0fdd39045fdd4080d9aafe22d90a5, type: 2}
-  - {fileID: 1460986569078178, guid: b7a0fdd39045fdd4080d9aafe22d90a5, type: 2}
-  - {fileID: 1460986569078178, guid: b7a0fdd39045fdd4080d9aafe22d90a5, type: 2}
-  - {fileID: 1460986569078178, guid: b7a0fdd39045fdd4080d9aafe22d90a5, type: 2}
   - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
-  - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
-  - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
-  - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 110520, guid: 997613769ba577746bdcb9a455e829b1, type: 2}
+  - {fileID: 1460986569078178, guid: b7a0fdd39045fdd4080d9aafe22d90a5, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
