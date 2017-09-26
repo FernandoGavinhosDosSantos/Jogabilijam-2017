@@ -9,6 +9,7 @@ namespace Completed
 	//Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 	public class Player : MovingObject
     {
+        public Camera MainCamera;
         public GameObject[] HudVidas;
         public int vidas = 3;
         public GameObject[] HudMana;
@@ -63,10 +64,14 @@ namespace Completed
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
 
-            GameManager.instance.SetPlayer(this);
+            GameManager.instance.PlayerSetup(this, this.MainCamera);
 
-			//Call the Start function of the MovingObject base class.
-			base.Start ();
+            GameManager.instance.boardScript.SetCamera(Maps.CameraSettings(GameManager.instance.level));
+
+            GameManager.instance.boardScript.BuildLevel(Maps.LevelSettings(GameManager.instance.level));
+
+            //Call the Start function of the MovingObject base class.
+            base.Start ();
 		}
 			
 		
@@ -81,6 +86,10 @@ namespace Completed
             //Check if we are running either in the Unity editor or in a standalone build.
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
 
+            if(Input.GetAxis("Restart") > 0)
+            {
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
             if (Input.GetAxis("Iara") > 0 && !selecionando)
             {
                 Summon(iaraSummonArea, GameManager.IARA, false);

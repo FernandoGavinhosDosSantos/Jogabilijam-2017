@@ -10,6 +10,10 @@ namespace Completed
 	public class GameManager : MonoBehaviour
     {
         public Player player;
+        public Camera mainCamera;
+
+        public int columns = 4;
+        public int rows = 3;
 
         public const int IARA = 0;
         public const int SACI = 1;
@@ -31,7 +35,7 @@ namespace Completed
 		
 		private Text levelText;									//Text to display current level number.
 		private GameObject levelImage;							//Image to block out level as levels are being set up, background for levelText.
-		private int level = 1;									//Current level number, expressed in game as "Day 1".
+		public int level = 1;									//Current level number, expressed in game as "Day 1".
 		private List<Enemy> enemies;							//List of all Enemy units, used to issue them move commands.
 		private bool enemiesMoving;								//Boolean to check if enemies are moving.
 		private bool doingSetup = true;							//Boolean to check if we're setting up board, prevent Player from moving during setup.
@@ -96,7 +100,7 @@ namespace Completed
 			levelText = GameObject.Find("LevelText").GetComponent<Text>();
 			
 			//Set the text of levelText to the string "Day" and append the current level number.
-			levelText.text = "Day " + level;
+			levelText.text = "Level " + level;
 			
 			//Set levelImage to active blocking player's view of the game board during setup.
 			levelImage.SetActive(true);
@@ -111,7 +115,6 @@ namespace Completed
 			boardScript.SetupScene(level);
 			
 		}
-		
 		
 		//Hides black image used between levels
 		void HideLevelImage()
@@ -137,9 +140,10 @@ namespace Completed
 			StartCoroutine (MoveEnemies ());
 		}
 
-        public void SetPlayer(Player player)
+        public void PlayerSetup(Player player, Camera mainCamera)
         {
             this.player = player;
+            this.mainCamera = mainCamera;
         }
 
         public bool NoActiveSummons()

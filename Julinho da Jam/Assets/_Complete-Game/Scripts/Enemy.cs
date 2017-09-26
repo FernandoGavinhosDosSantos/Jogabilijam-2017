@@ -82,7 +82,6 @@ namespace Completed
 
         public void Die()
         {
-            Debug.Log("inimigo: ggwp");
             animator.SetTrigger("enemyDeath");
             trapped = true;
         }

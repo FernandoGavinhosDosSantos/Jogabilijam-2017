@@ -408,6 +408,10 @@ Prefab:
       propertyPath: HudMana.Array.data[2]
       value: 
       objectReference: {fileID: 1474499249}
+    - target: {fileID: 11446652, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
+      propertyPath: MainCamera
+      value: 
+      objectReference: {fileID: 1089777628}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
   m_IsPrefabParent: 0
@@ -635,7 +639,7 @@ GameObject:
   - component: {fileID: 1089777625}
   - component: {fileID: 1089777630}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1062,7 +1066,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.24080703, y: 0}
   m_AnchorMax: {x: 0.28680703, y: 0.08767398}
-  m_AnchoredPosition: {x: -1.0999985, y: -0.3999939}
+  m_AnchoredPosition: {x: -1.1000061, y: -0.3999939}
   m_SizeDelta: {x: 2.5, y: -0.8000002}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2021621733
