@@ -12,7 +12,6 @@ namespace Completed
         public static float Delay = 0;
         public int horizontal = 0;     //Used to store the horizontal move direction.
         public int vertical = 0;       //Used to store the vertical move direction.
-        public static SelectArea instance;
         public int wallDamage = 1;                  //How much damage a player does to a wall when chopping it.
 
 
@@ -21,18 +20,9 @@ namespace Completed
 #endif
 
 
-
-
-        //This function is called when the behaviour becomes disabled or inactive.
-        private void OnDisable()
+        void Update()
         {
-            //When Player object is disabled, store the current local food total in the GameManager so it can be re-loaded in next level.
-            //GameManager.instance.playerFoodPoints = food;
-        }
 
-
-        private void Update()
-        {
             Delay += Time.deltaTime;
 			if(Delay <= 0.2) return;
 
@@ -46,6 +36,7 @@ namespace Completed
                     GameManager.instance.playersTurn = false;
                     GameManager.instance.summonId = -1;
                     Destroy(gameObject);
+                    GameManager.instance.isSaci = false;
                 }
             }
             if (Input.GetAxis("Cancel") > 0)
@@ -54,6 +45,7 @@ namespace Completed
                 Player.selecionando = false;
                 GameManager.instance.summonId = -1;
                 Destroy(gameObject);
+                GameManager.instance.isSaci = false;
             }
 
             //Check if we are running either in the Unity editor or in a standalone build.
@@ -117,7 +109,7 @@ namespace Completed
             //Check if we have a non-zero value for horizontal or vertical
             if (horizontal != 0 || vertical != 0)
             {
-                    AttemptMove(horizontal, vertical);
+                AttemptMove(horizontal, vertical);
             }
         }
 
@@ -136,6 +128,5 @@ namespace Completed
                 //SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
             }
         }
-
     }
 }

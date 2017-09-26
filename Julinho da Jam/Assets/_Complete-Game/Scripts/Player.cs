@@ -47,14 +47,19 @@ namespace Completed
                 { 1, 2, 1},
                 { 1, 1, 1},
             };
+        private int[,] saciSummonArea = new int[3, 3] {
+                { 0, 1, 0},
+                { 1, 2, 1},
+                { 0, 1, 0},
+            };
 
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
 
 
-    //Start overrides the Start function of MovingObject
-    protected override void Start ()
+        //Start overrides the Start function of MovingObject
+        protected override void Start ()
         {
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
@@ -79,9 +84,14 @@ namespace Completed
             {
                 Summon(iaraSummonArea, GameManager.IARA, false);
             }
-            if (Input.GetAxis("Saci_CorpoSeco") > 0 && !selecionando)
+            if (Input.GetAxis("Corpo-Seco") > 0 && !selecionando)
             {
                 Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
+            }
+            if (Input.GetAxis("Saci-Perere") > 0 && !selecionando)
+            {
+                GameManager.instance.isSaci = true;
+                Summon(saciSummonArea, GameManager.SACI, true);
             }
 
             //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction

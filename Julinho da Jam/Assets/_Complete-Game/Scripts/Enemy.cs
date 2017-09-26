@@ -6,7 +6,8 @@ namespace Completed
 	//Enemy inherits from MovingObject, our base class for objects that can move, Player also inherits from this.
 	public class Enemy : MovingObject
 	{
-		public int playerDamage; 							//The amount of food points to subtract from the player when attacking.
+        private Transform SaciPosition;
+        public int playerDamage; 							//The amount of food points to subtract from the player when attacking.
 		public AudioClip attackSound1;						//First of two audio clips to play when attacking the player.
 		public AudioClip attackSound2;						//Second of two audio clips to play when attacking the player.
         public int charmed;
@@ -134,6 +135,63 @@ namespace Completed
                 trapped = true;
                 Destroy(collision.gameObject);
             }
+        }
+
+        public void Saci()
+        {
+            SaciPosition = GameObject.FindGameObjectWithTag("Saci").transform;
+            float xEnemy = transform.position.x;
+            float yEnemy = transform.position.y;
+            float xSaci = SaciPosition.transform.position.x;
+            float ySaci = SaciPosition.transform.position.y;
+
+            if (xEnemy == xSaci + 1 && (yEnemy == ySaci || yEnemy == ySaci + 1 || yEnemy == ySaci - 1))
+            {
+                Empurrao();
+            }
+            if (xEnemy == xSaci - 1 && (yEnemy == ySaci || yEnemy == ySaci + 1 || yEnemy == ySaci - 1))
+            {
+                Empurrao();
+            }
+            if (yEnemy == ySaci + 1 && xEnemy == xSaci)
+            {
+                Empurrao();
+            }
+            if (yEnemy == ySaci - 1 && xEnemy == xSaci)
+            {
+                Empurrao();
+            }
+        }
+        //MoveEnemy is called by the GameManger each turn to tell each Enemy to try to move towards the player.
+        public void Empurrao()
+        {
+            //Declare variables for X and Y axis move directions, these range from -1 to 1.
+            //These values allow us to choose between the cardinal directions: up, down, left and right.
+            int xDir = 0;
+            int yDir = 0;
+
+            if (SaciPosition.position.y == transform.position.y)
+            {
+                yDir = 0;
+            }
+            else
+            {
+                //If the y coordinate of the target's (player) position is greater than the y coordinate of this enemy's position set y direction 1 (to move up). If not, set it to -1 (to move down).
+                yDir = SaciPosition.position.y > transform.position.y ? -1 : 1;
+            }
+
+            if (SaciPosition.position.x == transform.position.x)
+            {
+                xDir = 0;
+            }
+            else
+            {
+                //Check if target x position is greater than enemy's x position, if so set x direction to 1 (move right), if not set to -1 (move left).
+                xDir = SaciPosition.position.x > transform.position.x ? -1 : 1;
+            }
+
+            //Call the AttemptMove function and pass in the generic parameter Player, because Enemy is moving and expecting to potentially encounter a Player
+            AttemptMove<Sacizera>(xDir, yDir);
         }
     }
 }
