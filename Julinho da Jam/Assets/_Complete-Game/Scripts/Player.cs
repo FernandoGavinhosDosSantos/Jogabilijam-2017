@@ -79,7 +79,7 @@ namespace Completed
             {
                 Summon(iaraSummonArea, GameManager.IARA, false);
             }
-            if (Input.GetAxis("Boitatá") > 0 && !selecionando)
+            if (Input.GetAxis("Saci_CorpoSeco") > 0 && !selecionando)
             {
                 Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
             }
