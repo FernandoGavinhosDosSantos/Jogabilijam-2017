@@ -61,6 +61,8 @@ namespace Completed
     //Start overrides the Start function of MovingObject
     protected override void Start ()
         {
+            id = 'P';
+
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
 
@@ -78,7 +80,7 @@ namespace Completed
 		private void Update ()
 		{
 			//If it's not the player's turn, exit the function.
-			if(!GameManager.instance.playersTurn) return;
+			if(!GameManager.instance.playersTurn || GameManager.instance.waitArrow) return;
 
             int horizontal = 0;  	//Used to store the horizontal move direction.
 			int vertical = 0;       //Used to store the vertical move direction.
@@ -157,7 +159,6 @@ namespace Completed
 			{
                 if (selecionando == false)
                 {
-                    AttemptMove<Wall>(horizontal, vertical);
                     AttemptMove<Enemy>(horizontal, vertical);
                 }
             }
@@ -191,8 +192,11 @@ namespace Completed
 		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
 		protected override void AttemptMove <T> (int xDir, int yDir)
 		{
-			//Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
-			base.AttemptMove <T> (xDir, yDir);
+
+            GameManager.instance.boardAtt(id, (int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.x + xDir), (int)Mathf.Round(transform.position.y + yDir));
+
+            //Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
+            base.AttemptMove <T> (xDir, yDir);
 			
 			//Hit allows us to reference the result of the Linecast done in Move.
 			RaycastHit2D hit;
@@ -211,7 +215,7 @@ namespace Completed
 		protected override void OnCantMove <T> (T component)
 		{
             Type paramType = typeof(T);
-
+            /*
             if (paramType.Equals(typeof(Wall)))
             {
                 //Set hitWall to equal the component passed in as a parameter.
@@ -220,15 +224,24 @@ namespace Completed
                 //Call the DamageWall function of the Wall we are hitting.
                 hitWall.DamageWall(wallDamage);
             }
-            else if (paramType.Equals(typeof(Enemy)))
+            else*/ if (paramType.Equals(typeof(Enemy)))
             {
                 Enemy hitEnemy = component as Enemy;
+                if (hitEnemy.trapped) return;
                 hitEnemy.Damage(1);
             }
 			//Set the attack trigger of the player's animation controller in order to play the player's attack animation.
 			animator.SetTrigger ("playerChop");
 		}
 		
+        public void invokeRestart()
+        {
+				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
+				Invoke ("Restart", restartLevelDelay);
+				
+				//Disable the player object since level is over.
+				enabled = false;
+        }
 		
 		//OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
 		private void OnTriggerEnter2D (Collider2D other)
@@ -236,11 +249,9 @@ namespace Completed
 			//Check if the tag of the trigger collided with is Exit.
 			if(other.tag == "Exit")
 			{
-				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
-				Invoke ("Restart", restartLevelDelay);
-				
-				//Disable the player object since level is over.
-				enabled = false;
+                GameManager.instance.win = true;
+
+                invokeRestart();
 			}
 
 		}

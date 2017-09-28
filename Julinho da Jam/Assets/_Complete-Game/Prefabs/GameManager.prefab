@@ -42,6 +42,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
+  mainCamera: {fileID: 0}
+  columns: 4
+  rows: 3
   levelStartDelay: 2
   turnDelay: 0.1
   playerFoodPoints: 100
@@ -51,6 +54,7 @@ MonoBehaviour:
   Iara: {fileID: 0}
   activeSummons: 00000000
   summonId: -1
+  level: 1
 --- !u!114 &11433658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -63,8 +67,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Highlight: {fileID: 1763906841060668, guid: 9155674a23a94dd4194a45b3085f3d04, type: 2}
-  columns: 8
-  rows: 8
   wallCount:
     minimum: 5
     maximum: 9
@@ -88,6 +90,7 @@ MonoBehaviour:
   enemyTiles:
   - {fileID: 161064, guid: 089a2f2c322ea40f9afdfaba0550c6d3, type: 2}
   - {fileID: 195068, guid: ebfba08a213d34c46ba2b1947aeaea83, type: 2}
+  - {fileID: 1153927505020632, guid: 95f15a13dd8e2754a82f094db6c0eff6, type: 2}
   outerWallTiles:
   - {fileID: 110520, guid: 7094f72151ec74f569c4e03f1ec0f8e7, type: 2}
   - {fileID: 110520, guid: b0ace21a29149403094422fb3bd96aa9, type: 2}

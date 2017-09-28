@@ -6,6 +6,7 @@ namespace Completed
 	//The abstract keyword enables you to create classes and class members that are incomplete and must be implemented in a derived class.
 	public abstract class MovingObject : MonoBehaviour
 	{
+        protected char id;
 		public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
 		public LayerMask blockingLayer;         //Layer on which collision will be checked.
         public LayerMask OutterWall;
@@ -105,14 +106,19 @@ namespace Completed
 		protected virtual void AttemptMove <T> (int xDir, int yDir)
 			where T : Component
 		{
+
 			//Hit will store whatever our linecast hits when Move is called.
 			RaycastHit2D hit;
 			
 			//Set canMove to true if Move was successful, false if failed.
 			bool canMove = Move (xDir, yDir, out hit);
 			
-			//Check if nothing was hit by linecast
-			if(hit.transform == null)
+            if (canMove)
+                GameManager.instance.boardAtt(id, (int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.x + xDir), (int)Mathf.Round(transform.position.y + yDir));
+
+
+            //Check if nothing was hit by linecast
+            if (hit.transform == null)
 				//If nothing was hit, return and don't execute further code.
 				return;
 			

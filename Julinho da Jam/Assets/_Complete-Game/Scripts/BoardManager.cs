@@ -90,11 +90,15 @@ namespace Completed
 
         public GameObject Summon(int summonId, Vector3 position)
         {
-            foreach (Vector3 pos in gridPositions)
-            {
-                if (pos.Equals(position))
+            int x = (int) Mathf.Round(position.x);
+            int y = (int) Mathf.Round(position.y);
+            char[,] levelSetup = GameManager.instance.levelSettings;
+
+            bool xInRange = (x >= 0 && x < levelSetup.GetLength(0));
+            bool yInRange = (y >= 0 && y < levelSetup.GetLength(1));
+
+            if (xInRange && yInRange && levelSetup[x,y] == '_')
                     return Instantiate(SummonTiles[summonId], position, Quaternion.identity);
-            }
 
             return null;
         }
@@ -146,6 +150,16 @@ namespace Completed
 
         public void BuildLevel(char[,] board)
         {
+            GameManager.instance.levelSettings = new char[board.GetLength(0), board.GetLength(1)];
+
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    GameManager.instance.levelSettings[i, j] = board[i, j];
+                }
+            }
+
             for (int i = 0; i < board.GetLength(0); i++)
             {
                 for (int j = 0; j < board.GetLength(1); j++)
@@ -157,8 +171,14 @@ namespace Completed
                             break;
                         case '_':
                             break;
-                        case 'E':
+                        case 'T':
                             Instantiate(enemyTiles[0], new Vector3(i, j, 0), Quaternion.identity);
+                            break;
+                        case 'L':
+                            Instantiate(enemyTiles[1], new Vector3(i, j, 0), Quaternion.identity);
+                            break;
+                        case 'A':
+                            Instantiate(enemyTiles[2], new Vector3(i, j, 0), Quaternion.identity);
                             break;
                         case 'W':
                             Instantiate(wallTiles[0], new Vector3(i, j, 0), Quaternion.identity);

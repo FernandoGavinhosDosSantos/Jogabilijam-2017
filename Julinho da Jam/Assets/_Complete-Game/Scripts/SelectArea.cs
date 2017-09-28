@@ -43,6 +43,7 @@ namespace Completed
                 {
                     Player.selecionando = false;
                     if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(5, summon);
+                    GameManager.instance.levelSettings[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.x)] = 'S';
                     GameManager.instance.playersTurn = false;
                     GameManager.instance.summonId = -1;
                     GameManager.instance.player.loseMana(1);
