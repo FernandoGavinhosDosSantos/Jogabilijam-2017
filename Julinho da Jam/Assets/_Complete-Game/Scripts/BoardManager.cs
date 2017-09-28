@@ -26,8 +26,8 @@ namespace Completed
 		}
 
         public GameObject Highlight;
-        public int columns = 8; 										//Number of columns in our game board.
-		public int rows = 8;											//Number of rows in our game board.
+        //public int columns = 3; 										//Number of columns in our game board.
+		//public int rows = 3;											//Number of rows in our game board.
 		public Count wallCount = new Count (5, 9);						//Lower and upper limit for our random number of walls per level.
 		public Count foodCount = new Count (1, 5);						//Lower and upper limit for our random number of food items per level.
 		public GameObject exit;											//Prefab to spawn for exit.
@@ -49,10 +49,10 @@ namespace Completed
 			gridPositions.Clear ();
 			
 			//Loop through x axis (columns).
-			for(int x = 0; x < columns; x++)
+			for(int x = 0; x < GameManager.instance.columns; x++)
 			{
 				//Within each column, loop through y axis (rows).
-				for(int y = 0; y < rows; y++)
+				for(int y = 0; y < GameManager.instance.rows; y++)
 				{
 					//At each index add a new Vector3 to our list with the x and y coordinates of that position.
 					gridPositions.Add (new Vector3(x, y, 0f));
@@ -60,29 +60,27 @@ namespace Completed
 			}
 		}
 		
-		
 		//Sets up the outer walls and floor (background) of the game board.
 		void BoardSetup ()
 		{
 			//Instantiate Board and set boardHolder to its transform.
 			boardHolder = new GameObject ("Board").transform;
-			
+
 			//Loop along x axis, starting from -1 (to fill corner) with floor or outerwall edge tiles.
-			for(int x = -1; x < columns + 1; x++)
+			for(int x = -1; x < GameManager.instance.columns + 1; x++)
 			{
 				//Loop along y axis, starting from -1 to place floor or outerwall tiles.
-				for(int y = -1; y < rows + 1; y++)
+				for(int y = -1; y < GameManager.instance.rows + 1; y++)
 				{
 					//Choose a random tile from our array of floor tile prefabs and prepare to instantiate it.
 					GameObject toInstantiate = floorTiles;
 					
 					//Check if we current position is at board edge, if so choose a random outer wall prefab from our array of outer wall tiles.
-					if(x == -1 || x == columns || y == -1 || y == rows)
+					if(x == -1 || x == GameManager.instance.columns || y == -1 || y == GameManager.instance.rows)
 						toInstantiate = outerWallTiles [Random.Range (0, outerWallTiles.Length)];
 					
 					//Instantiate the GameObject instance using the prefab chosen for toInstantiate at the Vector3 corresponding to current grid position in loop, cast it to GameObject.
-					GameObject instance =
-						Instantiate (toInstantiate, new Vector3 (x, y, 0f), Quaternion.identity) as GameObject;
+					GameObject instance = Instantiate (toInstantiate, new Vector3 (x, y, 0f), Quaternion.identity) as GameObject;
 					
 					//Set the parent of our newly instantiated object instance to boardHolder, this is just organizational to avoid cluttering hierarchy.
 					instance.transform.SetParent (boardHolder);
@@ -90,13 +88,17 @@ namespace Completed
 			}
 		}
 
-        public GameObject Summon(int creature, Vector3 position)
+        public GameObject Summon(int summonId, Vector3 position)
         {
-            foreach (Vector3 pos in gridPositions)
-            {
-                if (pos.Equals(position))
-                    return Instantiate(SummonTiles[creature], position, Quaternion.identity);
-            }
+            int x = (int) Mathf.Round(position.x);
+            int y = (int) Mathf.Round(position.y);
+            char[,] levelSetup = GameManager.instance.levelSettings;
+
+            bool xInRange = (x >= 0 && x < levelSetup.GetLength(0));
+            bool yInRange = (y >= 0 && y < levelSetup.GetLength(1));
+
+            if (xInRange && yInRange && levelSetup[x,y] == '_')
+                    return Instantiate(SummonTiles[summonId], position, Quaternion.identity);
 
             return null;
         }
@@ -139,9 +141,68 @@ namespace Completed
 			}
 		}
 
+        public void SetCamera(float[] camera)
+        {
+            Vector3 pos = new Vector3(camera[0], camera[1], camera[2]);
+            GameManager.instance.mainCamera.transform.position = pos;
+            GameManager.instance.mainCamera.orthographicSize = camera[3];
+        }
+
+        public void BuildLevel(char[,] board)
+        {
+            GameManager.instance.levelSettings = new char[board.GetLength(0), board.GetLength(1)];
+
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    GameManager.instance.levelSettings[i, j] = board[i, j];
+                }
+            }
+
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    switch (board[i, j])
+                    {
+                        case 'P':
+                            GameManager.instance.player.transform.position = new Vector3(i, j, 0);
+                            break;
+                        case '_':
+                            break;
+                        case 'T':
+                            Instantiate(enemyTiles[0], new Vector3(i, j, 0), Quaternion.identity);
+                            break;
+                        case 'L':
+                            Instantiate(enemyTiles[1], new Vector3(i, j, 0), Quaternion.identity);
+                            break;
+                        case 'A':
+                            Instantiate(enemyTiles[2], new Vector3(i, j, 0), Quaternion.identity);
+                            break;
+                        case 'W':
+                            Instantiate(wallTiles[0], new Vector3(i, j, 0), Quaternion.identity);
+                            break;
+                        case 'F':
+                            Instantiate(exit, new Vector3(i, j, 0), Quaternion.identity);
+                            break;
+                    }
+                }
+            }
+        }
+
         //SetupScene initializes our level and calls the previous functions to lay out the game board
         public void SetupScene (int level)
 		{
+            int[] boardSize = Maps.BoardSettings(GameManager.instance.level);
+
+            GameManager.instance.columns = boardSize[0];
+            GameManager.instance.rows = boardSize[1];
+
+			//Creates the outer walls and floor.
+			BoardSetup();
+
+            /*
 			//Creates the outer walls and floor.
 			BoardSetup ();
 			
@@ -161,7 +222,8 @@ namespace Completed
 			LayoutObjectAtRandom (enemyTiles, enemyCount, enemyCount, true);
 			
 			//Instantiate the exit tile in the upper right hand corner of our game board
-			Instantiate (exit, new Vector3 (columns - 1, rows - 1, 0f), Quaternion.identity);
-		}
+			Instantiate (exit, new Vector3 (GameManager.instance.columns - 1, GameManager.instance.rows - 1, 0f), Quaternion.identity);
+            */
+        }
 	}
 }

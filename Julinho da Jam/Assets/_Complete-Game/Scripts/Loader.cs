@@ -23,5 +23,5 @@ namespace Completed
 				//Instantiate SoundManager prefab
 				Instantiate(soundManager);
 		}
-	}
+    }
 }

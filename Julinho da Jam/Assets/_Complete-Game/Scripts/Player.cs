@@ -2,15 +2,20 @@
 using System.Collections;
 using UnityEngine.UI;	//Allows us to use UI.
 using UnityEngine.SceneManagement;
+using System;
 
 namespace Completed
 {
 	//Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
 	public class Player : MovingObject
     {
+        public Camera MainCamera;
         public GameObject[] HudVidas;
         public int vidas = 3;
-        public static bool selecionado = false;
+        public GameObject[] HudMana;
+        public int mana = 3;
+
+        public static bool selecionando = false;
         public GameObject Marca;
 
         public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
@@ -25,36 +30,57 @@ namespace Completed
 		
 		private Animator animator;					//Used to store a reference to the Player's animator component.
 
-        private int[,] iaraSummonArea;
+        private int[,] iaraSummonArea = new int[15, 15] {
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+                { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
+        };
+        private int[,] corpoSecoSummonArea = new int[3, 3] {
+                { 1, 1, 1},
+                { 1, 2, 1},
+                { 1, 1, 1},
+            };
 
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
 
 
-        //Start overrides the Start function of MovingObject
-        protected override void Start ()
-		{
-            iaraSummonArea = new int[5, 5] {
-                { 0, 0, 1, 0, 0 },
-                { 0, 1, 1, 1, 0 },
-                { 1, 1, 2, 1, 1 },
-                { 0, 1, 1, 1, 0 },
-                { 0, 0, 1, 0, 0 },
-            };
+    //Start overrides the Start function of MovingObject
+    protected override void Start ()
+        {
+            id = 'P';
 
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
-			
-			//Call the Start function of the MovingObject base class.
-			base.Start ();
+
+            GameManager.instance.PlayerSetup(this, this.MainCamera);
+
+            GameManager.instance.boardScript.SetCamera(Maps.CameraSettings(GameManager.instance.level));
+
+            GameManager.instance.boardScript.BuildLevel(Maps.LevelSettings(GameManager.instance.level));
+
+            //Call the Start function of the MovingObject base class.
+            base.Start ();
 		}
 			
 		
 		private void Update ()
 		{
 			//If it's not the player's turn, exit the function.
-			if(!GameManager.instance.playersTurn) return;
+			if(!GameManager.instance.playersTurn || GameManager.instance.waitArrow) return;
 
             int horizontal = 0;  	//Used to store the horizontal move direction.
 			int vertical = 0;       //Used to store the vertical move direction.
@@ -62,18 +88,18 @@ namespace Completed
             //Check if we are running either in the Unity editor or in a standalone build.
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
 
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+            if(Input.GetAxis("Restart") > 0)
             {
-                if(selecionado == false)
-                {
-                        Summon(iaraSummonArea, GameManager.IARA);      
-                }
-                else
-                {
-                    selecionado = false;
-                }
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-
+            if (Input.GetAxis("Iara") > 0 && !selecionando)
+            {
+                Summon(iaraSummonArea, GameManager.IARA, false);
+            }
+            if (Input.GetAxis("Saci_CorpoSeco") > 0 && !selecionando)
+            {
+                Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
+            }
 
             //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
             horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
@@ -131,25 +157,31 @@ namespace Completed
 			//Check if we have a non-zero value for horizontal or vertical
 			if(horizontal != 0 || vertical != 0)
 			{
-                if (selecionado == false)
-                    AttemptMove<Wall>(horizontal, vertical);
+                if (selecionando == false)
+                {
+                    AttemptMove<Enemy>(horizontal, vertical);
+                }
             }
 		}
 
-        private void Summon(int[,] summonArea, int summonId)
+        private void Summon(int[,] summonArea, int summonId, bool excecao)
         {
-            if (!GameManager.instance.activeSummons[summonId])
+            if (mana > 0 && !selecionando && (!GameManager.instance.activeSummons[summonId] || excecao))
             {
+                selecionando = true;
+                GameManager.instance.activeSummons[summonId] = true;
+                GameManager.instance.summonId = summonId;
                 Instantiate(Marca, new Vector2(this.transform.position.x, this.transform.position.y), Quaternion.identity);
-                selecionado = true;
+
                 for (int i = 0; i < summonArea.GetLength(0); i++)
                 {
                     for (int j = 0; j < summonArea.GetLength(1); j++)
                     {
                         if (summonArea[i, j] == 1)
                         {
-                            Vector3 SummonPos = new Vector3(transform.position.x - 2 + i, transform.position.y - 2 + j);
-                            GameManager.instance.boardScript.Summon(summonId, SummonPos);
+                            int dif = summonArea.GetLength(0) / 2;
+                            Vector3 SummonPos = new Vector3(transform.position.x - dif + i, transform.position.y - dif + j);
+                            GameManager.instance.boardScript.Summon(GameManager.S_AREA, SummonPos);
                         }
                     }
                 }
@@ -160,8 +192,11 @@ namespace Completed
 		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
 		protected override void AttemptMove <T> (int xDir, int yDir)
 		{
-			//Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
-			base.AttemptMove <T> (xDir, yDir);
+
+            GameManager.instance.boardAtt(id, (int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.x + xDir), (int)Mathf.Round(transform.position.y + yDir));
+
+            //Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
+            base.AttemptMove <T> (xDir, yDir);
 			
 			//Hit allows us to reference the result of the Linecast done in Move.
 			RaycastHit2D hit;
@@ -179,16 +214,34 @@ namespace Completed
 		//It takes a generic parameter T which in the case of Player is a Wall which the player can attack and destroy.
 		protected override void OnCantMove <T> (T component)
 		{
-			//Set hitWall to equal the component passed in as a parameter.
-			Wall hitWall = component as Wall;
-			
-			//Call the DamageWall function of the Wall we are hitting.
-			hitWall.DamageWall (wallDamage);
-			
+            Type paramType = typeof(T);
+            /*
+            if (paramType.Equals(typeof(Wall)))
+            {
+                //Set hitWall to equal the component passed in as a parameter.
+                Wall hitWall = component as Wall;
+
+                //Call the DamageWall function of the Wall we are hitting.
+                hitWall.DamageWall(wallDamage);
+            }
+            else*/ if (paramType.Equals(typeof(Enemy)))
+            {
+                Enemy hitEnemy = component as Enemy;
+                if (hitEnemy.trapped) return;
+                hitEnemy.Damage(1);
+            }
 			//Set the attack trigger of the player's animation controller in order to play the player's attack animation.
 			animator.SetTrigger ("playerChop");
 		}
 		
+        public void invokeRestart()
+        {
+				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
+				Invoke ("Restart", restartLevelDelay);
+				
+				//Disable the player object since level is over.
+				enabled = false;
+        }
 		
 		//OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
 		private void OnTriggerEnter2D (Collider2D other)
@@ -196,11 +249,9 @@ namespace Completed
 			//Check if the tag of the trigger collided with is Exit.
 			if(other.tag == "Exit")
 			{
-				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
-				Invoke ("Restart", restartLevelDelay);
-				
-				//Disable the player object since level is over.
-				enabled = false;
+                GameManager.instance.win = true;
+
+                invokeRestart();
 			}
 
 		}
@@ -244,7 +295,27 @@ namespace Completed
             //Check to see if game has ended.
 		}
 		
-		
+		public void loseMana(int loss)
+        {
+            mana--;
+
+            //Update the food display with the new total.
+            //foodText.text = "-"+ loss + " Food: " + food;
+
+            if (mana == 2)
+            {
+                HudMana[2].SetActive(false);
+            }
+            else if (mana == 1)
+            {
+                HudMana[1].SetActive(false);
+            }
+            else if (mana == 0)
+            {
+                HudMana[0].SetActive(false);
+            }
+        }
+
 		//CheckIfGameOver checks if the player is out of food points and if so, ends the game.
 		private void CheckIfGameOver ()
 		{

@@ -8,6 +8,8 @@ TagManager:
   - Exit
   - Enemy
   - Soda
+  - Ally
+  - CorpoSeco
   layers:
   - Default
   - TransparentFX
