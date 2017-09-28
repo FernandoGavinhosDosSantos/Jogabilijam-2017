@@ -6,7 +6,9 @@ namespace Completed
 	//The abstract keyword enables you to create classes and class members that are incomplete and must be implemented in a derived class.
 	public abstract class MovingObject : MonoBehaviour
 	{
-		public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
+        public bool empurrando = false;
+        public bool atordoado = false;
+        public float moveTime = 0.1f;			//Time it will take object to move, in seconds.
 		public LayerMask blockingLayer;         //Layer on which collision will be checked.
         public LayerMask OutterWall;
         RaycastHit2D hitParede;
@@ -20,8 +22,9 @@ namespace Completed
 		//Protected, virtual functions can be overridden by inheriting classes.
 		protected virtual void Start ()
 		{
-			//Get a component reference to this object's BoxCollider2D
-			boxCollider = GetComponent <BoxCollider2D> ();
+
+            //Get a component reference to this object's BoxCollider2D
+            boxCollider = GetComponent <BoxCollider2D> ();
 			
 			//Get a component reference to this object's Rigidbody2D
 			rb2D = GetComponent <Rigidbody2D> ();
@@ -64,13 +67,16 @@ namespace Completed
                     //Set the playersTurn boolean of GameManager to false now that players turn is over.
                     GameManager.instance.playersTurn = false;
                     }
-
-                    //Return true to say that Move was successful
                     return true;
                 }
             }
 
-            //If something was hit, return false, Move was unsuccesful.
+            if(this.gameObject.tag == "Enemy" && empurrando == true)
+            {
+                atordoado = true;
+                Destroy(GameObject.FindWithTag("Saci"));
+            }
+
             return false;
 		}
 		
@@ -97,6 +103,10 @@ namespace Completed
 				//Return and loop until sqrRemainingDistance is close enough to zero to end the function
 				yield return null;
 			}
+            if (this.gameObject.tag == "Enemy")
+            {
+                empurrando = false;
+            }
 		}
 		
 		

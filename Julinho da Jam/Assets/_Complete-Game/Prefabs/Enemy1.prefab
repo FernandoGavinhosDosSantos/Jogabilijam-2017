@@ -106,11 +106,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d22f79ef0655a41bb9e62823f6e7a3f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  empurrando: 0
+  atordoado: 0
   moveTime: 0.1
   blockingLayer:
     serializedVersion: 2
     m_Bits: 256
-  Parede:
+  OutterWall:
     serializedVersion: 2
     m_Bits: 512
   playerDamage: 10

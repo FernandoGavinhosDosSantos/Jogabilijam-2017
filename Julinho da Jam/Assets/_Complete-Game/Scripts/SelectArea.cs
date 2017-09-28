@@ -9,6 +9,7 @@ namespace Completed
     //Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
     public class SelectArea : MoveSelection
     {
+        private Transform playerPosition;
         public static float Delay = 0;
         public int horizontal = 0;     //Used to store the horizontal move direction.
         public int vertical = 0;       //Used to store the vertical move direction.
@@ -19,7 +20,11 @@ namespace Completed
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
 
-
+        void Start()
+        {
+            playerPosition = GameObject.FindGameObjectWithTag("Player").transform;
+            base.Start();
+        }
         void Update()
         {
 
@@ -28,12 +33,15 @@ namespace Completed
 
             if (Input.GetAxis("Confirm") > 0)
             {
+                // caso area d seleçao esteja sobre player impede summon
+                if (transform.position == playerPosition.position) return;
+
                 GameObject summon = GameManager.instance.boardScript.Summon(GameManager.instance.summonId, transform.position);
                 if (summon)
                 {
                     Player.selecionando = false;
                     if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(5, summon);
-                    GameManager.instance.playersTurn = false;
+                    if (GameManager.instance.summonId != GameManager.SACI) GameManager.instance.playersTurn = false;
                     GameManager.instance.summonId = -1;
                     Destroy(gameObject);
                     GameManager.instance.isSaci = false;
@@ -109,24 +117,9 @@ namespace Completed
             //Check if we have a non-zero value for horizontal or vertical
             if (horizontal != 0 || vertical != 0)
             {
-                AttemptMove(horizontal, vertical);
+                Move(horizontal, vertical);
             }
         }
 
-        //AttemptMove overrides the AttemptMove function in the base class MovingObject
-        //AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
-        protected override void AttemptMove(int xDir, int yDir)
-        {
-
-            //Hit allows us to reference the result of the Linecast done in Move.
-            RaycastHit2D hit;
-
-            //If Move returns true, meaning Player was able to move into an empty space.
-            if (Move(xDir, yDir, out hit))
-            {
-                //Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
-                //SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
-            }
-        }
     }
 }
