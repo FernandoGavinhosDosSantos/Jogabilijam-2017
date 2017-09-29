@@ -99,13 +99,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ddf305c1b8dfe540900e766d5cd8f91, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 0.1
   HighLight:
     serializedVersion: 2
     m_Bits: 1024
+  cursor: {fileID: 8300000, guid: 2302d5f3405fad64f96d4df1a82c372d, type: 3}
   horizontal: 0
   vertical: 0
   wallDamage: 1
+  iaraSound: {fileID: 8300000, guid: 356e7b0e0bb1a9e4cbd31d4129b98a13, type: 3}
+  saciSound: {fileID: 8300000, guid: 56f8caf16fa8e0b40a36b049f12e48fe, type: 3}
+  boitataSound: {fileID: 8300000, guid: 37a6bb2aaebf8894ca39c0bd3599a4bb, type: 3}
+  corpoSecoSound: {fileID: 8300000, guid: 72a3e4f1661b5684fa80315fbe64b835, type: 3}
 --- !u!212 &212957602419338754
 SpriteRenderer:
   m_ObjectHideFlags: 1

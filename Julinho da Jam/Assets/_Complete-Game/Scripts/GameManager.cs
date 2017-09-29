@@ -15,8 +15,8 @@ namespace Completed
         public bool win;
 
         public char[,] levelSettings;
-        public int columns = 4;
-        public int rows = 3;
+        public int columns = 5;
+        public int rows = 4;
 
         public const int IARA = 0;
         public const int SACI = 1;

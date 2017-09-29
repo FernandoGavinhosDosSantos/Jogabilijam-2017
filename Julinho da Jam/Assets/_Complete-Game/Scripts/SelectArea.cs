@@ -15,12 +15,14 @@ namespace Completed
         public static SelectArea instance;
         public int wallDamage = 1;                  //How much damage a player does to a wall when chopping it.
 
+        public AudioClip iaraSound;
+        public AudioClip saciSound;
+        public AudioClip boitataSound;
+        public AudioClip corpoSecoSound;
 
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
-
-
 
 
         //This function is called when the behaviour becomes disabled or inactive.
@@ -34,19 +36,36 @@ namespace Completed
         private void Update()
         {
             Delay += Time.deltaTime;
-			if(Delay <= 0.2) return;
+            if (Delay <= 0.2) return;
 
             if (Input.GetAxis("Confirm") > 0)
             {
                 GameObject summon = GameManager.instance.boardScript.Summon(GameManager.instance.summonId, transform.position);
                 if (summon)
                 {
+                    if (GameManager.instance.summonId == 0)
+                    {
+                        SoundManager.instance.PlaySingle(iaraSound);
+                    }
+                    else if (GameManager.instance.summonId == 1)
+                    {
+                        SoundManager.instance.PlaySingle(saciSound);
+                    }
+                    else if (GameManager.instance.summonId == 2)
+                    {
+                        SoundManager.instance.PlaySingle(boitataSound);
+                    }
+                    else if (GameManager.instance.summonId == 3)
+                    {
+                        SoundManager.instance.PlaySingle(corpoSecoSound);
+                    }
                     Player.selecionando = false;
                     if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(5, summon);
-                    GameManager.instance.levelSettings[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.x)] = 'S';
+                    if (GameManager.instance.summonId == GameManager.CORPO_SECO) GameManager.instance.levelSettings[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = 'S';
                     GameManager.instance.playersTurn = false;
                     GameManager.instance.summonId = -1;
                     GameManager.instance.player.loseMana(1);
+                    Player.animator.SetBool("playerSumm", false);
                     Destroy(gameObject);
                 }
             }
@@ -55,10 +74,12 @@ namespace Completed
                 GameManager.instance.activeSummons[GameManager.instance.summonId] = false;
                 Player.selecionando = false;
                 GameManager.instance.summonId = -1;
+                Player.animator.SetBool("playerSumm", false);
                 Destroy(gameObject);
             }
 
-            //Check if we are running either in the Unity editor or in a standalone build.
+
+    //Check if we are running either in the Unity editor or in a standalone build.
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
 
 

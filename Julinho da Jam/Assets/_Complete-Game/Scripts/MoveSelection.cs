@@ -6,25 +6,18 @@ namespace Completed
 { 
     public abstract class MoveSelection : MonoBehaviour
     {
-        public float moveTime = 0.1f;           //Time it will take object to move, in seconds.
         public LayerMask HighLight;         //Layer on which collision will be checked.
-
-        private BoxCollider2D boxCollider;      //The BoxCollider2D component attached to this object.
         private Rigidbody2D rb2D;               //The Rigidbody2D component attached to this object.
-        private float inverseMoveTime;          //Used to make movement more efficient.
+        public AudioClip cursor;
+
 
 
         //Protected, virtual functions can be overridden by inheriting classes.
         protected virtual void Start()
         {
-            //Get a component reference to this object's BoxCollider2D
-            boxCollider = GetComponent<BoxCollider2D>();
 
             //Get a component reference to this object's Rigidbody2D
             rb2D = GetComponent<Rigidbody2D>();
-
-            //By storing the reciprocal of the move time we can use it by multiplying instead of dividing, this is more efficient.
-            inverseMoveTime = 1f / moveTime;
         }
 
 
@@ -46,8 +39,15 @@ namespace Completed
             //Check if anything was hit
             if (hit.transform != null)
             {
-                //If nothing was hit, start SmoothMovement co-routine passing in the Vector2 end as destination
-                StartCoroutine(SmoothMovement(end));
+                //Find a new position proportionally closer to the end, based on the moveTime
+                Vector2 newPostion = new Vector2(end.x, end.y);
+
+                //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
+                rb2D.MovePosition(newPostion);
+
+                SoundManager.instance.PlaySingle(cursor);
+
+
                 //Set the playersTurn boolean of GameManager to false now that players turn is over.
                 SelectArea.Delay = 0;
                 return true;
@@ -57,21 +57,6 @@ namespace Completed
                 //Return true to say that Move was successful
                 return false;
             }
-        }
-
-        //Co-routine for moving units from one space to next, takes a parameter end to specify where to move to.
-        protected IEnumerator SmoothMovement(Vector3 end)
-        {
-
-                //Find a new position proportionally closer to the end, based on the moveTime
-                Vector2 newPostion = new Vector2(end.x,end.y);
-
-                //Call MovePosition on attached Rigidbody2D and move it to the calculated position.
-                rb2D.MovePosition(newPostion);
-
-                //Return and loop until sqrRemainingDistance is close enough to zero to end the function
-                yield return null;
-            
         }
 
 
@@ -88,7 +73,6 @@ namespace Completed
 
             //Check if nothing was hit by linecast
             if (hit.transform == null)
-                //If nothing was hit, return and don't execute further code.
                 return;
 
         }

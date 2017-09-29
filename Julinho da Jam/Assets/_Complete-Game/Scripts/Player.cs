@@ -22,13 +22,9 @@ namespace Completed
 		public int wallDamage = 1;					//How much damage a player does to a wall when chopping it.
 		public AudioClip moveSound1;				//1 of 2 Audio clips to play when player moves.
 		public AudioClip moveSound2;				//2 of 2 Audio clips to play when player moves.
-		public AudioClip eatSound1;					//1 of 2 Audio clips to play when player collects a food object.
-		public AudioClip eatSound2;					//2 of 2 Audio clips to play when player collects a food object.
-		public AudioClip drinkSound1;				//1 of 2 Audio clips to play when player collects a soda object.
-		public AudioClip drinkSound2;				//2 of 2 Audio clips to play when player collects a soda object.
 		public AudioClip gameOverSound;				//Audio clip to play when player dies.
 		
-		private Animator animator;					//Used to store a reference to the Player's animator component.
+		public static Animator animator;					//Used to store a reference to the Player's animator component.
 
         private int[,] iaraSummonArea = new int[15, 15] {
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -172,6 +168,7 @@ namespace Completed
                 GameManager.instance.activeSummons[summonId] = true;
                 GameManager.instance.summonId = summonId;
                 Instantiate(Marca, new Vector2(this.transform.position.x, this.transform.position.y), Quaternion.identity);
+                animator.SetBool("playerSumm", true);
 
                 for (int i = 0; i < summonArea.GetLength(0); i++)
                 {

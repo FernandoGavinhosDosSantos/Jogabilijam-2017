@@ -9,7 +9,10 @@ namespace Completed
         protected bool leftTurned;
 		public int playerDamage; 							//The amount of food points to subtract from the player when attacking.
 		public AudioClip attackSound1;						//First of two audio clips to play when attacking the player.
-		public AudioClip attackSound2;						//Second of two audio clips to play when attacking the player.
+		public AudioClip attackSound2;                      //Second of two audio clips to play when attacking the player.
+        public AudioClip takeDamagehue;
+        public AudioClip takeDamage;
+
         public int charmed;
         SpriteRenderer mySpriteRenderer;
 
@@ -230,6 +233,7 @@ namespace Completed
 
                 //Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
                 SoundManager.instance.RandomizeSfx(attackSound1, attackSound2);
+                SoundManager.instance.RandomizeSfx(takeDamage, takeDamagehue);
             }
         }
 
