@@ -10,6 +10,7 @@ TagManager:
   - Soda
   - Ally
   - CorpoSeco
+  - Wall
   layers:
   - Default
   - TransparentFX

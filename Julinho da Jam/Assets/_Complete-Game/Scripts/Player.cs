@@ -47,19 +47,29 @@ namespace Completed
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
         };
+        private int[,] boitataSummonArea = new int[3, 3] {
+                { 0, 1, 0},
+                { 1, 2, 1},
+                { 0, 1, 0},
+        };
+        private int[,] saciSummonArea = new int[3, 3] {
+                { 0, 1, 0},
+                { 1, 2, 1},
+                { 0, 1, 0},
+        };
         private int[,] corpoSecoSummonArea = new int[3, 3] {
                 { 1, 1, 1},
                 { 1, 2, 1},
                 { 1, 1, 1},
-            };
+        };
 
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
         private Vector2 touchOrigin = -Vector2.one;	//Used to store location of screen touch origin for mobile controls.
 #endif
 
 
-    //Start overrides the Start function of MovingObject
-    protected override void Start ()
+        //Start overrides the Start function of MovingObject
+        protected override void Start ()
         {
             id = 'P';
 
@@ -80,7 +90,7 @@ namespace Completed
 		private void Update ()
 		{
 			//If it's not the player's turn, exit the function.
-			if(!GameManager.instance.playersTurn || GameManager.instance.waitArrow) return;
+			if(!GameManager.instance.playersTurn || GameManager.instance.waitAnimation) return;
 
             int horizontal = 0;  	//Used to store the horizontal move direction.
 			int vertical = 0;       //Used to store the vertical move direction.
@@ -92,13 +102,21 @@ namespace Completed
             {
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            if (Input.GetAxis("Iara") > 0 && !selecionando)
+            if (Input.GetAxis("Saci") > 0 && !selecionando)
             {
-                Summon(iaraSummonArea, GameManager.IARA, false);
+                Summon(saciSummonArea, GameManager.SACI, false);
             }
-            if (Input.GetAxis("Saci_CorpoSeco") > 0 && !selecionando)
+            if (Input.GetAxis("CorpoSeco") > 0 && !selecionando)
             {
                 Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
+            }
+            if (Input.GetAxis("Boitata_Iara") > 0 && !selecionando)
+            {
+                Summon(boitataSummonArea, GameManager.BOITATA, true);
+            }
+            if (Input.GetAxis("Boitata_Iara") < 0 && !selecionando)
+            {
+                Summon(iaraSummonArea, GameManager.IARA, true);
             }
 
             //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
@@ -169,7 +187,7 @@ namespace Completed
             if (mana > 0 && !selecionando && (!GameManager.instance.activeSummons[summonId] || excecao))
             {
                 selecionando = true;
-                GameManager.instance.activeSummons[summonId] = true;
+                if(summonId == GameManager.IARA) GameManager.instance.activeSummons[summonId] = true;
                 GameManager.instance.summonId = summonId;
                 Instantiate(Marca, new Vector2(this.transform.position.x, this.transform.position.y), Quaternion.identity);
 
@@ -208,7 +226,6 @@ namespace Completed
 				SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
 			}
 		}
-		
 		
 		//OnCantMove overrides the abstract function OnCantMove in MovingObject.
 		//It takes a generic parameter T which in the case of Player is a Wall which the player can attack and destroy.

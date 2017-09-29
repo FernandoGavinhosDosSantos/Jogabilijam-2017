@@ -13,9 +13,14 @@ public class Flecha : MonoBehaviour {
     private Vector3 target;
     private Arqueira archer;
 
+    public void die()
+    {
+        Destroy(gameObject);
+    }
+
     public void Shoot(Arqueira archer, Vector3 target)
     {
-        GameManager.instance.waitArrow = true;
+        GameManager.instance.waitAnimation = true;
         this.shoot = true;
         this.target = target;
         this.archer = archer;
@@ -47,7 +52,7 @@ public class Flecha : MonoBehaviour {
                 float arrowY = Mathf.Round(transform.position.y);
 
                 if (playerX == arrowX && playerY == arrowY) GameManager.instance.player.LoseFood(1);
-                GameManager.instance.waitArrow = false;
+                GameManager.instance.waitAnimation = false;
                 Destroy(gameObject);
             }
         }

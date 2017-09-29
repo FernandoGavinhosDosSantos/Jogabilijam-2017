@@ -7,7 +7,7 @@ namespace Completed
 	public class Enemy : MovingObject
 	{
         protected bool leftTurned;
-		public int playerDamage; 							//The amount of food points to subtract from the player when attacking.
+		public int playerDamage = 1;						//The amount of food points to subtract from the player when attacking.
 		public AudioClip attackSound1;						//First of two audio clips to play when attacking the player.
 		public AudioClip attackSound2;						//Second of two audio clips to play when attacking the player.
         public int charmed;
@@ -58,7 +58,7 @@ namespace Completed
 
         private void Attack(int damage)
         {
-            if (charmed == 0)
+            if (male && charmed == 0)
             {
                 //Call the LoseFood function of hitPlayer passing it playerDamage, the amount of foodpoints to be subtracted.
                 GameManager.instance.player.LoseFood(damage);
@@ -73,9 +73,9 @@ namespace Completed
 
         //Override the AttemptMove function of MovingObject to include functionality needed for Enemy to skip turns.
         //See comments in MovingObject for more on how base AttemptMove function works.
-        protected override void AttemptMove <T> (int xDir, int yDir)
-		{
-            if(GameManager.instance.player.transform.position.x > transform.position.x)
+        protected override void AttemptMove<T>(int xDir, int yDir)
+        {
+            if (GameManager.instance.player.transform.position.x > transform.position.x)
             {
                 leftTurned = false;
                 mySpriteRenderer.flipX = true;
@@ -86,25 +86,27 @@ namespace Completed
                 mySpriteRenderer.flipX = false;
             }
 
-			//Check if skipMove is true, if so set it to false and skip this turn.
-			if(skipMove)
-			{
-				skipMove = false;
-				return;
-			}
+            //Check if skipMove is true, if so set it to false and skip this turn.
+            if (skipMove)
+            {
+                skipMove = false;
+                return;
+            }
 
             //Call the AttemptMove function from MovingObject.
-            base.AttemptMove <T> (xDir, yDir);
-            
-            if (IsPlayerUnderAttackRange(xDir, yDir))
+            base.AttemptMove<T>(xDir, yDir);
+
+            int x = (int)Mathf.Round(transform.position.x);
+            int y = (int)Mathf.Round(transform.position.y);
+
+            if (!skipMove && !trapped && GameManager.instance.levelSettings[x, y] != 'S' && IsPlayerUnderAttackRange(xDir, yDir))
             {
-                WaitForSeconds w = new WaitForSeconds(1f);
-                Attack(1);
+                Attack(playerDamage);
             }
-			
-			//Now that Enemy has moved, set skipMove to true to skip next move.
-			skipMove = true;
-		}
+
+            //Now that Enemy has moved, set skipMove to true to skip next move.
+            skipMove = true;
+        }
 
         public void Charm(int turns, Transform newTarget)
         {
@@ -120,16 +122,23 @@ namespace Completed
 
         private void Uncharm()
         {
-            GameManager.instance.activeSummons[GameManager.IARA] = false;
+            if (male)
+            {
+                GameManager.instance.activeSummons[GameManager.IARA] = false;
 
-            target = GameObject.FindGameObjectWithTag("Player").transform;
-            Destroy(GameManager.instance.Iara);
-            //inLoveSprite.inactivate(); **aguardando sprite**
+                target = GameObject.FindGameObjectWithTag("Player").transform;
+                Destroy(GameManager.instance.Iara);
+                //inLoveSprite.inactivate(); **aguardando sprite**
+            }
         }
 
-        public void Die()
+        public virtual void Die()
         {
+            int x = (int) Mathf.Round(transform.position.x);
+            int y = (int) Mathf.Round(transform.position.y);
+
             GetComponent<BoxCollider2D>().enabled = false;
+            GameManager.instance.levelSettings[x, y] = '_';
             animator.SetTrigger("enemyDeath");
             trapped = true;
         }
@@ -146,9 +155,12 @@ namespace Completed
 		//MoveEnemy is called by the GameManger each turn to tell each Enemy to try to move towards the player.
 		public void MoveEnemy ()
         {
+            if (male)
+            {
+                if (this.charmed > 0) this.charmed--;
+                else Uncharm();
+            }
             if (trapped) return;
-            if (this.charmed > 0) this.charmed--;
-            else Uncharm();
 
 			//Declare variables for X and Y axis move directions, these range from -1 to 1.
 			//These values allow us to choose between the cardinal directions: up, down, left and right.
@@ -207,7 +219,12 @@ namespace Completed
             bool newYInRange = (transform.position.y + yDir >= 0 && transform.position.y + yDir < GameManager.instance.levelSettings.GetLength(1));
 
             //Call the AttemptMove function and pass in the generic parameter Player, because Enemy is moving and expecting to potentially encounter a Player
-            if (GameManager.instance.levelSettings[x, y] == 'P')
+            if (GameManager.instance.levelSettings[x, y] == 'S')
+            {
+                Die();
+                GameManager.instance.levelSettings[x, y] = '_';
+            }
+            if (!skipMove && !trapped && GameManager.instance.levelSettings[x, y] == 'P')
                 OnCantMove(GameManager.instance.player);
             else if (newXInRange && newYInRange && (GameManager.instance.levelSettings[x,y] == '_' || GameManager.instance.levelSettings[x, y] == 'S'))
                 AttemptMove <Player> (xDir, yDir);

@@ -75,6 +75,12 @@ public class Arqueira : Enemy {
         hasArrow = true;
     }
 
+    public override void Die()
+    {
+        if (hasArrow) aInstance.die();
+        base.Die();
+    }
+
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
         for (int i = 0; i < sInstance.Length; i++)
@@ -85,20 +91,16 @@ public class Arqueira : Enemy {
         if (inactiveList.Count > 0)
             inactiveList.Dequeue().active = true;
 
-        if (skipMove || trapped)
-        {
-            skipMove = false;
-            return;
-        }
-
         if (hasArrow && isPlayerUnderAim > 0)
         {
             isPlayerUnderAim = 0;
 
             aInstance.Shoot(this, aimLocation);
         } else if (!hasArrow) Reload();
+    }
 
-        skipMove = true;
+    protected override void OnCantMove<T>(T component)
+    {
 
     }
 }

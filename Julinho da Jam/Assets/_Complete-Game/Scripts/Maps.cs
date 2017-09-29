@@ -8,10 +8,10 @@ public class Maps : MonoBehaviour {
     private static float[] m11CameraSetup = { 1.0f, 1.0f, -10.0f, 5.0f };
     private static char[,] m11LevelSetup =
     {
-        { '_', '_', '_', 'L' },
-        { '_', 'P', '_', '_' },
-        { '_', '_', '_', 'T' },
-        { 'F', 'W', '_', '_' },
+        { 'P', '_', 'A', '_', 'L' },
+        { '_', '_', '_', '_', '_' },
+        { '_', '_', '_', '_', '_' },
+        { 'F', 'W', '_', '_', '_' },
     };
 
     //fase 1.2
