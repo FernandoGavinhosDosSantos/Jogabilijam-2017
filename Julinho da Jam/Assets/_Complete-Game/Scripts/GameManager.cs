@@ -9,6 +9,10 @@ namespace Completed
 
     public class GameManager : MonoBehaviour
     {
+        public Vector3 boitataIni;
+        public Vector3 fireOrigin;
+        public Fogo initialFlame;
+
         public Player player;
         public Camera mainCamera;
         public bool waitAnimation;
@@ -34,17 +38,14 @@ namespace Completed
         public GameObject Iara;
         public bool[] activeSummons = new bool[] { false, false, false, false };
         public int summonId = -1;
-
-
+        
         private Text levelText;                                 //Text to display current level number.
         private GameObject levelImage;                          //Image to block out level as levels are being set up, background for levelText.
         public int level = 1;                                   //Current level number, expressed in game as "Day 1".
         private List<Enemy> enemies;                            //List of all Enemy units, used to issue them move commands.
         private bool enemiesMoving;                             //Boolean to check if enemies are moving.
         private bool doingSetup = true;                         //Boolean to check if we're setting up board, prevent Player from moving during setup.
-
-
-
+        
         //Awake is always called before any Start functions
         void Awake()
         {
@@ -95,6 +96,8 @@ namespace Completed
         //Initializes the game for each level.
         void InitGame()
         {
+            boitataIni = new Vector3(-1, -1, 0);
+
             //While doingSetup is true the player can't move, prevent player from moving while title card is up.
             doingSetup = true;
 
@@ -134,6 +137,9 @@ namespace Completed
         //Update is called every frame.
         void Update()
         {
+            if (GameManager.instance.initialFlame != null && waitAnimation)
+                foreach (Enemy e in enemies)
+                    e.taPegandoFogoBicho();
 
             //Check that playersTurn or enemiesMoving or doingSetup are not currently true.
             if (playersTurn || enemiesMoving || doingSetup || waitAnimation)
@@ -147,8 +153,6 @@ namespace Completed
 
         public void boardAtt(char id,int oldX, int oldY, int newX, int newY)
         {
-            //Debug.Log("[" + Time.timeSinceLevelLoad + "]" + id + "(" + oldX + "," + oldY + ") -> (" + newX + "," + newY + ")");
-
             bool oldXInRange = (oldX >= 0 && oldX < levelSettings.GetLength(0));
             bool oldYInRange = (oldY >= 0 && oldY < levelSettings.GetLength(1));
             bool newXInRange = (newX >= 0 && newX < levelSettings.GetLength(0));

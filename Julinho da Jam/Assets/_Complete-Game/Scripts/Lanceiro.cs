@@ -15,18 +15,21 @@ public class Lanceiro : Enemy
         base.Start();
     }
 
-    public override void Damage(int dmg)
+    public override void Damage(int dmg, bool reaction)
     {
         if (trapped) return;
 
-        float pX = Mathf.Round(GameManager.instance.player.transform.position.x);
-        float pY = Mathf.Round(GameManager.instance.player.transform.position.y);
-        float lX = Mathf.Round(transform.position.x);
-        float lY = Mathf.Round(transform.position.y);
+        if (reaction)
+        {
+            float pX = Mathf.Round(GameManager.instance.player.transform.position.x);
+            float pY = Mathf.Round(GameManager.instance.player.transform.position.y);
+            float lX = Mathf.Round(transform.position.x);
+            float lY = Mathf.Round(transform.position.y);
 
-        if (leftTurned && pY == lY && pX == lX - 1) GameManager.instance.player.LoseFood(1);
-        if (!leftTurned && pY == lY && pX == lX + 1) GameManager.instance.player.LoseFood(1);
+            if (leftTurned && pY == lY && pX == lX - 1) GameManager.instance.player.LoseFood(1);
+            if (!leftTurned && pY == lY && pX == lX + 1) GameManager.instance.player.LoseFood(1);
+        }
 
-        base.Damage(dmg);
+        base.Damage(dmg,reaction);
     }
 }

@@ -42,7 +42,12 @@ namespace Completed
                 if (summon)
                 {
                     Player.selecionando = false;
-                    if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(5, summon);
+                    if (GameManager.instance.summonId == GameManager.BOITATA)
+                    {
+                        Fogo initialFlame = summon.GetComponent<Fogo>();
+                        initialFlame.initialize();
+                    }
+                    if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(3, summon);
                     if (GameManager.instance.summonId == GameManager.CORPO_SECO) GameManager.instance.levelSettings[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = 'S';
                     GameManager.instance.playersTurn = false;
                     GameManager.instance.summonId = -1;

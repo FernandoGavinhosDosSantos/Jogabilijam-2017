@@ -11,6 +11,7 @@ TagManager:
   - Ally
   - CorpoSeco
   - Wall
+  - Fire
   layers:
   - Default
   - TransparentFX

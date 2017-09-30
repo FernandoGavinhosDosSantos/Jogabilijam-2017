@@ -9,19 +9,29 @@ public class Tornado : MonoBehaviour
 
     private float xDir;
     private float yDir;
+    private float speed = 10f;
 
     private Enemy victim;
 
     // Use this for initialization
     void Start()
     {
-        xDir = Mathf.Round(transform.position.x - GameManager.instance.player.transform.position.x) * 10f;
-        yDir = Mathf.Round(transform.position.y - GameManager.instance.player.transform.position.y) * 10f;
+        if (GameManager.instance.activeSummons[GameManager.BOITATA])
+        {
+            SpriteRenderer sprite = GetComponent<SpriteRenderer>();
+            sprite.enabled = false;
+            GameManager.instance.boitataIni.x = -1;
+            speed = 5f;
+        }
+
+        xDir = Mathf.Round(transform.position.x - GameManager.instance.player.transform.position.x) * speed;
+        yDir = Mathf.Round(transform.position.y - GameManager.instance.player.transform.position.y) * speed;
 
         int x = (int)Mathf.Round(transform.position.x);
         int y = (int)Mathf.Round(transform.position.y);
 
-        GameManager.instance.levelSettings[x, y] = '_';
+        if (GameManager.instance.levelSettings[x, y] != 'W')
+            GameManager.instance.levelSettings[x, y] = '_';
         GameManager.instance.waitAnimation = true;
     }
 
@@ -64,7 +74,7 @@ public class Tornado : MonoBehaviour
                 if (victim != null)
                 {
                     victim.Die();
-                    enemy.Damage(1);
+                    enemy.Damage(1, false);
                 }
                 victim = null;
                 GameManager.instance.waitAnimation = false;

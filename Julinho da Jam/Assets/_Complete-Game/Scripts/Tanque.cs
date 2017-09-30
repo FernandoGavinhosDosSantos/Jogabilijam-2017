@@ -15,19 +15,22 @@ public class Tanque : Enemy {
         base.Start();
     }
 
-    public override void Damage(int dmg)
+    public override void Damage(int dmg, bool reaction)
     {
         if (trapped) return;
 
-        float pX = Mathf.Round(GameManager.instance.player.transform.position.x);
-        float pY = Mathf.Round(GameManager.instance.player.transform.position.y);
-        float tX = Mathf.Round(transform.position.x);
-        float tY = Mathf.Round(transform.position.y);
+        if (reaction)
+        {
+            float pX = Mathf.Round(GameManager.instance.player.transform.position.x);
+            float pY = Mathf.Round(GameManager.instance.player.transform.position.y);
+            float tX = Mathf.Round(transform.position.x);
+            float tY = Mathf.Round(transform.position.y);
 
-        if (pX == tX && (pY == tY + 1 || pY == tY - 1)) GameManager.instance.player.LoseFood(1);
-        if (leftTurned && pY == tY && pX == tX - 1) GameManager.instance.player.LoseFood(1);
-        if (!leftTurned && pY == tY && pX == tX + 1) GameManager.instance.player.LoseFood(1);
+            if (pX == tX && (pY == tY + 1 || pY == tY - 1)) GameManager.instance.player.LoseFood(1);
+            if (leftTurned && pY == tY && pX == tX - 1) GameManager.instance.player.LoseFood(1);
+            if (!leftTurned && pY == tY && pX == tX + 1) GameManager.instance.player.LoseFood(1);
+        }
 
-        base.Damage(dmg);
+        base.Damage(dmg, reaction);
     }
 }

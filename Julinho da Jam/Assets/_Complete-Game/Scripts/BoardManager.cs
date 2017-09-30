@@ -97,7 +97,15 @@ namespace Completed
             bool xInRange = (x >= 0 && x < levelSetup.GetLength(0));
             bool yInRange = (y >= 0 && y < levelSetup.GetLength(1));
 
-            if (xInRange && yInRange && levelSetup[x,y] == '_')
+            if (GameManager.instance.summonId == GameManager.BOITATA)
+            {
+                if (xInRange && yInRange && (levelSetup[x, y] == 'L' || levelSetup[x, y] == 'A' || levelSetup[x, y] == 'T'))
+                    return Instantiate(SummonTiles[summonId], position, Quaternion.identity);
+
+                return null;
+            }
+
+            if (xInRange && (yInRange && levelSetup[x,y] == '_' || summonId == GameManager.BOITATA))
                     return Instantiate(SummonTiles[summonId], position, Quaternion.identity);
 
             return null;
@@ -139,7 +147,20 @@ namespace Completed
 				//Instantiate tileChoice at the position returned by RandomPosition with no change in rotation
 				Instantiate(tileChoice, randomPosition, Quaternion.identity);
 			}
-		}
+        }
+
+        public void SetCharacter(int[] character)
+        {
+            int qtdMana = 4;
+
+            GameManager.instance.player.mana = character[qtdMana];
+            GameManager.instance.player.DrawMana();
+
+            GameManager.instance.player.unlockedSummons[GameManager.SACI] = (character[GameManager.SACI] == 1);
+            GameManager.instance.player.unlockedSummons[GameManager.CORPO_SECO] = (character[GameManager.CORPO_SECO] == 1);
+            GameManager.instance.player.unlockedSummons[GameManager.BOITATA] = (character[GameManager.BOITATA] == 1);
+            GameManager.instance.player.unlockedSummons[GameManager.IARA] = (character[GameManager.IARA] == 1);
+        }
 
         public void SetCamera(float[] camera)
         {

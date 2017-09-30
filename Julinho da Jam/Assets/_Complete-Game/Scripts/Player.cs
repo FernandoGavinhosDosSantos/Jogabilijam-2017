@@ -3,32 +3,35 @@ using System.Collections;
 using UnityEngine.UI;	//Allows us to use UI.
 using UnityEngine.SceneManagement;
 using System;
+using System.Collections.Generic;
 
 namespace Completed
 {
-	//Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
-	public class Player : MovingObject
+    //Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
+    public class Player : MovingObject
     {
         public Camera MainCamera;
         public GameObject[] HudVidas;
         public int vidas = 3;
         public GameObject[] HudMana;
         public int mana = 3;
+        public bool[] unlockedSummons = { false, false, false, false };
 
         public static bool selecionando = false;
         public GameObject Marca;
+        public Queue<Fogo> fire;
 
-        public float restartLevelDelay = 1f;		//Delay time in seconds to restart level.
-		public int wallDamage = 1;					//How much damage a player does to a wall when chopping it.
-		public AudioClip moveSound1;				//1 of 2 Audio clips to play when player moves.
-		public AudioClip moveSound2;				//2 of 2 Audio clips to play when player moves.
-		public AudioClip eatSound1;					//1 of 2 Audio clips to play when player collects a food object.
-		public AudioClip eatSound2;					//2 of 2 Audio clips to play when player collects a food object.
-		public AudioClip drinkSound1;				//1 of 2 Audio clips to play when player collects a soda object.
-		public AudioClip drinkSound2;				//2 of 2 Audio clips to play when player collects a soda object.
-		public AudioClip gameOverSound;				//Audio clip to play when player dies.
-		
-		private Animator animator;					//Used to store a reference to the Player's animator component.
+        public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
+        public int wallDamage = 1;                  //How much damage a player does to a wall when chopping it.
+        public AudioClip moveSound1;                //1 of 2 Audio clips to play when player moves.
+        public AudioClip moveSound2;                //2 of 2 Audio clips to play when player moves.
+        public AudioClip eatSound1;                 //1 of 2 Audio clips to play when player collects a food object.
+        public AudioClip eatSound2;                 //2 of 2 Audio clips to play when player collects a food object.
+        public AudioClip drinkSound1;               //1 of 2 Audio clips to play when player collects a soda object.
+        public AudioClip drinkSound2;               //2 of 2 Audio clips to play when player collects a soda object.
+        public AudioClip gameOverSound;             //Audio clip to play when player dies.
+
+        private Animator animator;					//Used to store a reference to the Player's animator component.
 
         private int[,] iaraSummonArea = new int[15, 15] {
                 { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -69,68 +72,79 @@ namespace Completed
 
 
         //Start overrides the Start function of MovingObject
-        protected override void Start ()
+        protected override void Start()
         {
             id = 'P';
 
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
+            fire = new Queue<Fogo>();
 
             GameManager.instance.PlayerSetup(this, this.MainCamera);
+
+            GameManager.instance.boardScript.SetCharacter(Maps.CharacterSettings(GameManager.instance.level));
 
             GameManager.instance.boardScript.SetCamera(Maps.CameraSettings(GameManager.instance.level));
 
             GameManager.instance.boardScript.BuildLevel(Maps.LevelSettings(GameManager.instance.level));
 
             //Call the Start function of the MovingObject base class.
-            base.Start ();
-		}
-			
-		
-		private void Update ()
-		{
-			//If it's not the player's turn, exit the function.
-			if(!GameManager.instance.playersTurn || GameManager.instance.waitAnimation) return;
+            base.Start();
+        }
 
-            int horizontal = 0;  	//Used to store the horizontal move direction.
-			int vertical = 0;       //Used to store the vertical move direction.
+
+        private void Update()
+        {
+            //If it's not the player's turn, exit the function.
+            if (!GameManager.instance.playersTurn || GameManager.instance.waitAnimation) return;
+
+            int horizontal = 0;     //Used to store the horizontal move direction.
+            int vertical = 0;       //Used to store the vertical move direction.
 
             //Check if we are running either in the Unity editor or in a standalone build.
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
 
-            if(Input.GetAxis("Restart") > 0)
+            if (Input.GetAxis("Restart") > 0)
             {
+                if (GameManager.instance.level >= 9) GameManager.instance.level = 1;
+                else GameManager.instance.level++;
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
-            if (Input.GetAxis("Saci") > 0 && !selecionando)
+            if (Input.GetAxis("Restart") < 0)
+            {
+                if (GameManager.instance.level <= 1) GameManager.instance.level = 9;
+                else GameManager.instance.level--;
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            }
+            if (Input.GetAxis("Saci") > 0 && !selecionando && unlockedSummons[GameManager.SACI])
             {
                 Summon(saciSummonArea, GameManager.SACI, false);
             }
-            if (Input.GetAxis("CorpoSeco") > 0 && !selecionando)
+            if (Input.GetAxis("CorpoSeco") > 0 && !selecionando && unlockedSummons[GameManager.CORPO_SECO])
             {
                 Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
             }
-            if (Input.GetAxis("Boitata_Iara") > 0 && !selecionando)
+            if (Input.GetAxis("Boitata_Iara") > 0 && !selecionando && unlockedSummons[GameManager.BOITATA])
             {
                 Summon(boitataSummonArea, GameManager.BOITATA, true);
             }
-            if (Input.GetAxis("Boitata_Iara") < 0 && !selecionando)
+            if (Input.GetAxis("Boitata_Iara") < 0 && !selecionando && unlockedSummons[GameManager.IARA])
             {
                 Summon(iaraSummonArea, GameManager.IARA, true);
             }
 
             //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
-            horizontal = (int) (Input.GetAxisRaw ("Horizontal"));
-			
-			//Get input from the input manager, round it to an integer and store in vertical to set y axis move direction
-			vertical = (int) (Input.GetAxisRaw ("Vertical"));
-			
-			//Check if moving horizontally, if so set vertical to zero.
-			if(horizontal != 0)
-			{
-				vertical = 0;
-			}
-			//Check if we are running on iOS, Android, Windows Phone 8 or Unity iPhone
+            horizontal = (int)(Input.GetAxisRaw("Horizontal"));
+
+            //Get input from the input manager, round it to an integer and store in vertical to set y axis move direction
+            vertical = (int)(Input.GetAxisRaw("Vertical"));
+
+            //Check if moving horizontally, if so set vertical to zero.
+            if (horizontal != 0)
+            {
+                vertical = 0;
+            }
+            //Check if we are running on iOS, Android, Windows Phone 8 or Unity iPhone
 #elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
 			
 			//Check if Input has registered more than zero touches
@@ -172,22 +186,27 @@ namespace Completed
 			}
 			
 #endif //End of mobile platform dependendent compilation section started above with #elif
-			//Check if we have a non-zero value for horizontal or vertical
-			if(horizontal != 0 || vertical != 0)
-			{
-                if (selecionando == false)
+            //Check if we have a non-zero value for horizontal or vertical
+            if (horizontal != 0 || vertical != 0)
+            {
+                int x = (int)Math.Round(transform.position.x) + horizontal;
+                int y = (int)Math.Round(transform.position.y) + vertical;
+
+                if (selecionando == false && GameManager.instance.levelSettings[x, y] != 'W')
                 {
                     AttemptMove<Enemy>(horizontal, vertical);
+
+                    foreach (Fogo f in fire) f.turns--;
                 }
             }
-		}
+        }
 
         private void Summon(int[,] summonArea, int summonId, bool excecao)
         {
             if (mana > 0 && !selecionando && (!GameManager.instance.activeSummons[summonId] || excecao))
             {
                 selecionando = true;
-                if(summonId == GameManager.IARA) GameManager.instance.activeSummons[summonId] = true;
+                if (summonId == GameManager.IARA) GameManager.instance.activeSummons[summonId] = true;
                 GameManager.instance.summonId = summonId;
                 Instantiate(Marca, new Vector2(this.transform.position.x, this.transform.position.y), Quaternion.identity);
 
@@ -205,32 +224,32 @@ namespace Completed
                 }
             }
         }
-		
-		//AttemptMove overrides the AttemptMove function in the base class MovingObject
-		//AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
-		protected override void AttemptMove <T> (int xDir, int yDir)
-		{
+
+        //AttemptMove overrides the AttemptMove function in the base class MovingObject
+        //AttemptMove takes a generic parameter T which for Player will be of the type Wall, it also takes integers for x and y direction to move in.
+        protected override void AttemptMove<T>(int xDir, int yDir)
+        {
 
             GameManager.instance.boardAtt(id, (int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y), (int)Mathf.Round(transform.position.x + xDir), (int)Mathf.Round(transform.position.y + yDir));
 
             //Call the AttemptMove method of the base class, passing in the component T (in this case Wall) and x and y direction to move.
-            base.AttemptMove <T> (xDir, yDir);
-			
-			//Hit allows us to reference the result of the Linecast done in Move.
-			RaycastHit2D hit;
-			
-			//If Move returns true, meaning Player was able to move into an empty space.
-			if (Move (xDir, yDir, out hit)) 
-			{
-				//Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
-				SoundManager.instance.RandomizeSfx (moveSound1, moveSound2);
-			}
-		}
-		
-		//OnCantMove overrides the abstract function OnCantMove in MovingObject.
-		//It takes a generic parameter T which in the case of Player is a Wall which the player can attack and destroy.
-		protected override void OnCantMove <T> (T component)
-		{
+            base.AttemptMove<T>(xDir, yDir);
+
+            //Hit allows us to reference the result of the Linecast done in Move.
+            RaycastHit2D hit;
+
+            //If Move returns true, meaning Player was able to move into an empty space.
+            if (Move(xDir, yDir, out hit))
+            {
+                //Call RandomizeSfx of SoundManager to play the move sound, passing in two audio clips to choose from.
+                SoundManager.instance.RandomizeSfx(moveSound1, moveSound2);
+            }
+        }
+
+        //OnCantMove overrides the abstract function OnCantMove in MovingObject.
+        //It takes a generic parameter T which in the case of Player is a Wall which the player can attack and destroy.
+        protected override void OnCantMove<T>(T component)
+        {
             Type paramType = typeof(T);
             /*
             if (paramType.Equals(typeof(Wall)))
@@ -241,59 +260,60 @@ namespace Completed
                 //Call the DamageWall function of the Wall we are hitting.
                 hitWall.DamageWall(wallDamage);
             }
-            else*/ if (paramType.Equals(typeof(Enemy)))
+            else*/
+            if (paramType.Equals(typeof(Enemy)))
             {
                 Enemy hitEnemy = component as Enemy;
                 if (hitEnemy.trapped) return;
-                hitEnemy.Damage(1);
+                hitEnemy.Damage(1, true);
             }
-			//Set the attack trigger of the player's animation controller in order to play the player's attack animation.
-			animator.SetTrigger ("playerChop");
-		}
-		
+            //Set the attack trigger of the player's animation controller in order to play the player's attack animation.
+            animator.SetTrigger("playerChop");
+        }
+
         public void invokeRestart()
         {
-				//Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
-				Invoke ("Restart", restartLevelDelay);
-				
-				//Disable the player object since level is over.
-				enabled = false;
+            //Invoke the Restart function to start the next level with a delay of restartLevelDelay (default 1 second).
+            Invoke("Restart", restartLevelDelay);
+
+            //Disable the player object since level is over.
+            enabled = false;
         }
-		
-		//OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
-		private void OnTriggerEnter2D (Collider2D other)
-		{
-			//Check if the tag of the trigger collided with is Exit.
-			if(other.tag == "Exit")
-			{
+
+        //OnTriggerEnter2D is sent when another object enters a trigger collider attached to this object (2D physics only).
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            //Check if the tag of the trigger collided with is Exit.
+            if (other.tag == "Exit")
+            {
                 GameManager.instance.win = true;
 
                 invokeRestart();
-			}
+            }
 
-		}
-		
-		
-		//Restart reloads the scene when called.
-		private void Restart ()
-		{
-			//Load the last scene loaded, in this case Main, the only scene in the game. And we load it in "Single" mode so it replace the existing one
+        }
+
+
+        //Restart reloads the scene when called.
+        private void Restart()
+        {
+            //Load the last scene loaded, in this case Main, the only scene in the game. And we load it in "Single" mode so it replace the existing one
             //and not load all the scene object in the current scene.
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-		}
-		
-		
-		//LoseFood is called when an enemy attacks the player.
-		//It takes a parameter loss which specifies how many points to lose.
-		public void LoseFood (int loss)
-		{
-			//Set the trigger for the player animator to transition to the playerHit animation.
-			animator.SetTrigger ("playerHit");
-			
+        }
+
+
+        //LoseFood is called when an enemy attacks the player.
+        //It takes a parameter loss which specifies how many points to lose.
+        public void LoseFood(int loss)
+        {
+            //Set the trigger for the player animator to transition to the playerHit animation.
+            animator.SetTrigger("playerHit");
+
             vidas--;
-			
-			//Update the food display with the new total.
-			//foodText.text = "-"+ loss + " Food: " + food;
+
+            //Update the food display with the new total.
+            //foodText.text = "-"+ loss + " Food: " + food;
 
             if (vidas == 2)
             {
@@ -303,49 +323,56 @@ namespace Completed
             {
                 HudVidas[1].SetActive(false);
             }
-            else if(vidas == 0)
+            else if (vidas == 0)
             {
                 HudVidas[0].SetActive(false);
                 CheckIfGameOver();
             }
 
             //Check to see if game has ended.
-		}
-		
-		public void loseMana(int loss)
+        }
+
+        public void DrawMana()
         {
-            mana--;
-
-            //Update the food display with the new total.
-            //foodText.text = "-"+ loss + " Food: " + food;
-
             if (mana == 2)
             {
                 HudMana[2].SetActive(false);
             }
             else if (mana == 1)
             {
+                HudMana[2].SetActive(false);
                 HudMana[1].SetActive(false);
             }
             else if (mana == 0)
             {
+                HudMana[2].SetActive(false);
+                HudMana[1].SetActive(false);
                 HudMana[0].SetActive(false);
             }
         }
 
-		//CheckIfGameOver checks if the player is out of food points and if so, ends the game.
-		private void CheckIfGameOver ()
-		{
+        public void loseMana(int loss)
+        {
+            mana--;
 
-				//Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
-				SoundManager.instance.PlaySingle (gameOverSound);
-				
-				//Stop the background music.
-				SoundManager.instance.musicSource.Stop();
-				
-				//Call the GameOver function of GameManager.
-				GameManager.instance.GameOver ();
-		}
-	}
+            //Update the food display with the new total.
+            //foodText.text = "-"+ loss + " Food: " + food;
+
+            DrawMana();
+        }
+
+        //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
+        private void CheckIfGameOver()
+        {
+
+            //Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
+            SoundManager.instance.PlaySingle(gameOverSound);
+
+            //Stop the background music.
+            SoundManager.instance.musicSource.Stop();
+
+            //Call the GameOver function of GameManager.
+            GameManager.instance.GameOver();
+        }
+    }
 }
-

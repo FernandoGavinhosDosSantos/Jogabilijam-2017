@@ -201,7 +201,7 @@ InputManager:
     m_Name: Restart
     descriptiveName: 
     descriptiveNegativeName: 
-    negativeButton: 
+    negativeButton: joystick button 2
     positiveButton: joystick button 3
     altNegativeButton: 
     altPositiveButton: 
