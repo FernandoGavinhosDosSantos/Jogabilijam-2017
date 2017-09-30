@@ -175,7 +175,7 @@ namespace Completed
                             Instantiate(enemyTiles[0], new Vector3(i, j, 0), Quaternion.identity);
                             break;
                         case 'L':
-                            Instantiate(exit, new Vector3(i, j, 0), Quaternion.identity);
+                            Instantiate(enemyTiles[1], new Vector3(i, j, 0), Quaternion.identity);
                             break;
                         case 'A':
                             Instantiate(enemyTiles[2], new Vector3(i, j, 0), Quaternion.identity);

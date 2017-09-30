@@ -14,6 +14,13 @@ public class Tanque : Enemy {
 
         base.Start();
     }
+    void Update()
+    {
+        if(hp == 1)
+        {
+            animator.SetTrigger("enemyHurt");
+        }
+    }
 
     public override void Damage(int dmg)
     {

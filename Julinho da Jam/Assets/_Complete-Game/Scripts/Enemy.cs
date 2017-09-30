@@ -80,13 +80,13 @@ namespace Completed
 		{
             if(GameManager.instance.player.transform.position.x > transform.position.x)
             {
-                leftTurned = false;
-                mySpriteRenderer.flipX = true;
+                leftTurned = true;
+                mySpriteRenderer.flipX = false;
             }
             else
             {
-                leftTurned = true;
-                mySpriteRenderer.flipX = false;
+                leftTurned = false;
+                mySpriteRenderer.flipX = true;
             }
 
 			//Check if skipMove is true, if so set it to false and skip this turn.

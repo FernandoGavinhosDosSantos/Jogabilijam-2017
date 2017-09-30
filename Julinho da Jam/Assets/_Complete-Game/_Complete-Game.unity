@@ -414,11 +414,11 @@ Prefab:
       objectReference: {fileID: 1089777628}
     - target: {fileID: 446652, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
       propertyPath: m_LocalScale.x
-      value: 2.2
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 446652, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
       propertyPath: m_LocalScale.y
-      value: 2.2
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6146652, guid: 28b53fc28d3a140c392f0e2d919f9de1, type: 2}
       propertyPath: m_Size.x

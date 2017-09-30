@@ -45,19 +45,19 @@ namespace Completed
                 {
                     if (GameManager.instance.summonId == 0)
                     {
-                        SoundManager.instance.PlaySingle(iaraSound);
+                        SoundManager.instance.PlaySingleSummon(iaraSound);
                     }
                     else if (GameManager.instance.summonId == 1)
                     {
-                        SoundManager.instance.PlaySingle(saciSound);
+                        SoundManager.instance.PlaySingleSummon(saciSound);
                     }
                     else if (GameManager.instance.summonId == 2)
                     {
-                        SoundManager.instance.PlaySingle(boitataSound);
+                        SoundManager.instance.PlaySingleSummon(boitataSound);
                     }
                     else if (GameManager.instance.summonId == 3)
                     {
-                        SoundManager.instance.PlaySingle(corpoSecoSound);
+                        SoundManager.instance.PlaySingleSummon(corpoSecoSound);
                     }
                     Player.selecionando = false;
                     if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(5, summon);

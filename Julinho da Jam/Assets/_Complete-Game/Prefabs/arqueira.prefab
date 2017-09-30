@@ -39,7 +39,7 @@ Transform:
   m_GameObject: {fileID: 1153927505020632}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.9, y: -7.2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -87,7 +87,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
 --- !u!95 &95783569953821078
 Animator:
@@ -98,7 +98,7 @@ Animator:
   m_GameObject: {fileID: 1153927505020632}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 22100000, guid: 535c783fa6756494792270316064b1e7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -127,7 +127,10 @@ MonoBehaviour:
   playerDamage: 0
   attackSound1: {fileID: 0}
   attackSound2: {fileID: 0}
+  takeDamagehue: {fileID: 0}
+  takeDamage: {fileID: 0}
   charmed: 0
+  trapped: 0
   target: {fileID: 0}
   arrow: {fileID: 114579894860825076, guid: 232406d3fd87d9047b9b2981af1b8cc8, type: 2}
   sensor: {fileID: 114117757032982630, guid: bc42a0baaa18fe040a55ae8693890fa3, type: 2}

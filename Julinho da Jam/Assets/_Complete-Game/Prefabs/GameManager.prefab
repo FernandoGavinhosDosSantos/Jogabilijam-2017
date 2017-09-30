@@ -97,9 +97,9 @@ MonoBehaviour:
   - {fileID: 195068, guid: ebfba08a213d34c46ba2b1947aeaea83, type: 2}
   - {fileID: 1153927505020632, guid: 95f15a13dd8e2754a82f094db6c0eff6, type: 2}
   outerWallTiles:
-  - {fileID: 1747171201878322, guid: a259bcf6a521fb94d8fb6266390e56d1, type: 2}
-  - {fileID: 1204228570362638, guid: 33084e64887928e4d91418fb99e764f3, type: 2}
-  - {fileID: 1149027387764362, guid: f7c87c612d2dbfb43aefae640c129471, type: 2}
+  - {fileID: 1886839479786660, guid: c4c7c5940fc302c40856b2560d58d066, type: 2}
+  - {fileID: 1974317737355682, guid: aeab33ec8cbc09943944c6a4e12b4e1f, type: 2}
+  - {fileID: 1276407039173514, guid: f4df58b8067ff2148a16edcd226474e8, type: 2}
   SummonTiles:
   - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
   - {fileID: 0}
