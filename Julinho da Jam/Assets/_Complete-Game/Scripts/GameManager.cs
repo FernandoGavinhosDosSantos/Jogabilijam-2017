@@ -48,6 +48,7 @@ namespace Completed
         //Awake is always called before any Start functions
         void Awake()
         {
+
             //Check if instance already exists
             if (instance == null)
 
@@ -59,9 +60,18 @@ namespace Completed
 
                 //Then destroy this. This enforces our singleton pattern, meaning there can only ever be one instance of a GameManager.
                 Destroy(gameObject);
+            Scene currentScene = SceneManager.GetActiveScene();
+            string sceneName = currentScene.name;
+            if (sceneName == "_Complete-Game")
+            {
+                //Sets this to not be destroyed when reloading scene
+                DontDestroyOnLoad(gameObject);
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
 
-            //Sets this to not be destroyed when reloading scene
-            DontDestroyOnLoad(gameObject);
 
             //Assign enemies to a new List of Enemy objects.
             enemies = new List<Enemy>();
@@ -78,14 +88,19 @@ namespace Completed
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         static public void CallbackInitialization()
         {
-            //register the callback to be called everytime the scene is loaded
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            Scene currentScene = SceneManager.GetActiveScene();
+            string sceneName = currentScene.name;
+            if (sceneName == "_Complete-Game")
+            {
+                //register the callback to be called everytime the scene is loaded  
+                SceneManager.sceneLoaded += OnSceneLoaded;
+            }       
         }
 
         //This is called each time a scene is loaded.
         static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
-            if(GameManager.instance.win) instance.level++;
+            if (GameManager.instance.win) instance.level++;
             GameManager.instance.win = false;
             GameManager.instance.activeSummons = new bool[] { false, false, false, false };
             instance.InitGame();
@@ -188,7 +203,6 @@ namespace Completed
             //Add Enemy to List enemies.
             enemies.Add(script);
         }
-
 
         //GameOver is called when the player reaches 0 food points
         public void GameOver()
