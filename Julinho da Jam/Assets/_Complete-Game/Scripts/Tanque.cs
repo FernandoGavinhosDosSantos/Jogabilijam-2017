@@ -27,8 +27,8 @@ public class Tanque : Enemy {
             float tY = Mathf.Round(transform.position.y);
 
             if (pX == tX && (pY == tY + 1 || pY == tY - 1)) GameManager.instance.player.LoseFood(1);
-            if (leftTurned && pY == tY && pX == tX - 1) GameManager.instance.player.LoseFood(1);
-            if (!leftTurned && pY == tY && pX == tX + 1) GameManager.instance.player.LoseFood(1);
+            if (rightTurned && pY == tY && pX == tX - 1) GameManager.instance.player.LoseFood(1);
+            if (!rightTurned && pY == tY && pX == tX + 1) GameManager.instance.player.LoseFood(1);
         }
 
         base.Damage(dmg, reaction);

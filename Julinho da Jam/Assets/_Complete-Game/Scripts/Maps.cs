@@ -60,7 +60,7 @@ public class Maps : MonoBehaviour {
 
     //fase 3.1
     private static int[] m31CharacterSetup = { 1, 1, 0, 0, 2 };
-    private static float[] m31CameraSetup = { 3.0f, 2.5f, -10.0f, 5.0f };
+    private static float[] m31CameraSetup = { 2.0f, 2.5f, -10.0f, 5.0f };
     private static char[,] m31LevelSetup =
     {
         { 'W', 'W', 'T', '_', '_', '_', 'P' },
@@ -106,7 +106,7 @@ public class Maps : MonoBehaviour {
     {
         { 'W', '_', '_', '_', 'P' },
         { 'W', 'W', '_', '_', '_' },
-        { '_', 'T', '_', '_', 'W' },
+        { '_', '_', '_', '_', 'W' },
         { '_', '_', '_', 'L', '_' },
         { 'L', '_', '_', '_', '_' },
         { 'W', 'W', '_', '_', 'T' },
@@ -126,6 +126,20 @@ public class Maps : MonoBehaviour {
         { 'P', '_', '_', '_', '_', '_', 'T', '_', 'W' },
         { '_', 'L', '_', 'W', '_', '_', '_', 'T', 'W' },
         { '_', '_', '_', '_', '_', '_', '_', '_', 'F' },
+    };
+
+    //fase 5.2
+    private static int[] m52CharacterSetup = { 0, 0, 0, 0, 3 };
+    private static float[] m52CameraSetup = { 3.5f, 3.0f, -10.0f, 5.5f };
+    private static char[,] m52LevelSetup =
+    {
+        { 'W', 'W', '_', 'i', '_', 'W', 'W' },
+        { 'W', 'W', 'W', 'W', 'W', 'W', 'W' },
+        { '_', 'W', '_', 'g', '_', 'W', '_' },
+        { 'c', 'W', 't', 'P', 'r', 'W', 's' },
+        { '_', 'W', '_', 'f', '_', 'W', '_' },
+        { 'W', 'W', 'W', 'W', 'W', 'W', 'W' },
+        { 'W', 'W', '_', 'b', '_', 'W', 'W' },
     };
 
     public static int[] BoardSettings(int level)
@@ -150,10 +164,8 @@ public class Maps : MonoBehaviour {
                 return new int[] { m42LevelSetup.GetLength(0), m42LevelSetup.GetLength(1) };
             case 9:
                 return new int[] { m51LevelSetup.GetLength(0), m51LevelSetup.GetLength(1) };
-                /*
             case 10:
                 return new int[] { m52LevelSetup.GetLength(0), m52LevelSetup.GetLength(1) };
-                */
         }
         return null;
     }
@@ -180,10 +192,8 @@ public class Maps : MonoBehaviour {
                 return m42CharacterSetup;
             case 9:
                 return m51CharacterSetup;
-                /*
             case 10:
                 return m52CharacterSetup;
-                */
         }
         return null;
     }
@@ -210,10 +220,8 @@ public class Maps : MonoBehaviour {
                 return m42CameraSetup;
             case 9:
                 return m51CameraSetup;
-                 /*
             case 10:
                 return m52CameraSetup;
-                */
         }
         return null;
     }
@@ -240,10 +248,8 @@ public class Maps : MonoBehaviour {
                 return m42LevelSetup;
             case 9:
                 return m51LevelSetup;
-                /*
             case 10:
                 return m52LevelSetup;
-                */
         }
         return null;
     }

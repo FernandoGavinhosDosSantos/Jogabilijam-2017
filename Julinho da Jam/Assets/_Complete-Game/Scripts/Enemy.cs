@@ -7,7 +7,7 @@ namespace Completed
     //Enemy inherits from MovingObject, our base class for objects that can move, Player also inherits from this.
     public class Enemy : MovingObject
     {
-        protected bool leftTurned;
+        protected bool rightTurned;
         public int playerDamage = 1;                        //The amount of food points to subtract from the player when attacking.
         public AudioClip attackSound1;                      //First of two audio clips to play when attacking the player.
         public AudioClip attackSound2;						//Second of two audio clips to play when attacking the player.
@@ -19,6 +19,7 @@ namespace Completed
 
         protected int hp;
         public bool trapped;
+        public bool gonnaTrapped;
         protected bool male;                                //bool var that says if this unit is male or not (used in Iara's hability)
         protected Animator animator;                        //Variable of type Animator to store a reference to the enemy's Animator component.
         public Transform target;                            //Transform to attempt to move toward each turn.
@@ -37,8 +38,8 @@ namespace Completed
             animator = GetComponent<Animator>();
             mySpriteRenderer = GetComponent<SpriteRenderer>();
 
-            leftTurned = (GameManager.instance.player.transform.position.x < transform.position.x);
-            mySpriteRenderer.flipX = !leftTurned;
+            rightTurned = (GameManager.instance.player.transform.position.x > transform.position.x);
+            mySpriteRenderer.flipX = !rightTurned;
 
             //Find the Player GameObject using it's tag and store a reference to its transform component.
             target = GameObject.FindGameObjectWithTag("Player").transform;
@@ -55,23 +56,23 @@ namespace Completed
             float eY = Mathf.Round(transform.position.y + yDir);
 
             if (pX == eX && (pY == eY + 1 || pY == eY - 1)) return true;
-            if (leftTurned && pY == eY && pX == eX - 1) return true;
-            if (!leftTurned && pY == eY && pX == eX + 1) return true;
+            if (rightTurned && pY == eY && pX == eX + 1) return true;
+            if (!rightTurned && pY == eY && pX == eX - 1) return true;
             return false;
         }
 
         private void Attack(int damage)
         {
-            if (male && charmed == 0)
+            if (male && charmed == 0 && !gonnaTrapped)
             {
+
                 //Call the LoseFood function of hitPlayer passing it playerDamage, the amount of foodpoints to be subtracted.
                 GameManager.instance.player.LoseFood(damage);
 
                 //Set the attack trigger of animator to trigger Enemy attack animation.
                 animator.SetTrigger("enemyAttack");
-
-                //Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
-                SoundManager.instance.RandomizeSfx(attackSound1, attackSound2);
+                    //Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
+                    //SoundManager.instance.RandomizeSfx(attackSound1, attackSound2);
             }
         }
 
@@ -79,14 +80,14 @@ namespace Completed
         //See comments in MovingObject for more on how base AttemptMove function works.
         protected override void AttemptMove<T>(int xDir, int yDir)
         {
-            if (GameManager.instance.player.transform.position.x > transform.position.x)
+            if (GameManager.instance.player.transform.position.x < transform.position.x)
             {
-                leftTurned = false;
+                rightTurned = false;
                 mySpriteRenderer.flipX = true;
             }
             else
             {
-                leftTurned = true;
+                rightTurned = true;
                 mySpriteRenderer.flipX = false;
             }
 
@@ -152,6 +153,7 @@ namespace Completed
         {
             hp -= dmg;
             if (hp <= 0) Die();
+            else animator.SetTrigger("enemyHurt");
 
             //Set the playersTurn boolean of GameManager to false now that players turn is over.
             GameManager.instance.playersTurn = false;
@@ -275,7 +277,6 @@ namespace Completed
 
             if (GameManager.instance.levelSettings[x, y] == 'W')
             {
-                Debug.Log("(" + x + "," + y + ")");
                 if (xDir == 0)
                 {
                     if (target.position.x > transform.position.x)
@@ -311,7 +312,7 @@ namespace Completed
             //Call the AttemptMove function and pass in the generic parameter Player, because Enemy is moving and expecting to potentially encounter a Player
             if (GameManager.instance.levelSettings[x, y] == 'S')
             {
-                Die();
+                gonnaTrapped = true;
                 GameManager.instance.levelSettings[x, y] = '_';
             }
 
@@ -335,7 +336,7 @@ namespace Completed
 
                 //Set the attack trigger of animator to trigger Enemy attack animation.
                 animator.SetTrigger("enemyAttack");
-
+                
                 //Call the RandomizeSfx function of SoundManager passing in the two audio clips to choose randomly between.
                 SoundManager.instance.RandomizeSfx(attackSound1, attackSound2);
             }

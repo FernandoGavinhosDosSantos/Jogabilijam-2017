@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 161064}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.3, y: 0.3}
   m_EdgeRadius: 0
 --- !u!95 &9561064
 Animator:
@@ -125,7 +125,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -900995045
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -159,16 +159,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bb1557c949a69545bdbb2df4a0d80ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   moveTime: 0.1
   blockingLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   OutterWall:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   playerDamage: 0
-  attackSound1: {fileID: 0}
-  attackSound2: {fileID: 0}
+  attackSound1: {fileID: 8300000, guid: 0ca451bc3791528448f6aff0d07a24b3, type: 3}
+  attackSound2: {fileID: 8300000, guid: baac7db159ecbd74194e8ef56defd8fb, type: 3}
   charmed: 0
   trapped: 0
+  gonnaTrapped: 0
   target: {fileID: 0}

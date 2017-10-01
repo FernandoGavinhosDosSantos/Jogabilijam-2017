@@ -1,5 +1,5 @@
 WindowsStandalone
-6c64be30617cced8397e0c6ad204c9f9 Assembly-CSharp.dll:Completed.Player
+53fb20f968d2ed6ee373d1b9ff13ef75 Assembly-CSharp.dll:Completed.Player
 dc07d7ad69b399a46e92c483bf1c04ca UnityEngine.Analytics.dll:UnityEngine.Analytics.AnalyticsTracker
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationPlayableAsset
 9f07aaefd0255462bb6e4f9e5da6b2d4 UnityEngine.Timeline.dll:UnityEngine.Timeline.ActivationTrack
@@ -90,7 +90,7 @@ ff05dcdf90651c3d98a9cad3df5e471e UnityEngine.Timeline.dll:UnityEngine.Timeline.C
 7b848b7feaa524953d09fc1851efa6da UnityEngine.Timeline.dll:UnityEngine.Timeline.GroupTrack
 7b848b7feaa524953d09fc1851efa6da UnityEngine.Timeline.dll:UnityEngine.Timeline.PlayableTrack
 c24a21b131bfa67be1162db2cba4b52b UnityEngine.Timeline.dll:UnityEngine.Timeline.TimelineAsset
-9fa2356e8898065ff7128abac5a06041 Assembly-CSharp.dll:.Lanceiro
+8ba1708084536c9a2913b15ecaa2130c Assembly-CSharp.dll:.Lanceiro
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -110,12 +110,15 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 463516d5b5fe8e67a0a24c48f2095b04 UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInputModule
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingRenderer
+5023cc9e2f9e5129a74a910e2194edfc Assembly-CSharp.dll:.Menu
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Maps
-d0cbc462bf169459312e914bad5af9cb Assembly-CSharp.dll:Completed.SoundManager
-43af3b4980a3c2d21d17ad9556155b03 Assembly-CSharp.dll:Completed.BoardManager
-a466e4a44022cc5f06b5997fb29cfe7b Assembly-CSharp.dll:.Arqueira
+29128337021af92423182593e2760ee9 Assembly-CSharp.dll:Completed.SoundManager
+dc7beecd73655ef9a809419b797464ef Assembly-CSharp.dll:Completed.BoardManager
+7865c326b49313a0c3816577e5e8fa75 Assembly-CSharp.dll:.MenuSelection
+4120d0024e2435cab033a49f93fad250 Assembly-CSharp.dll:.Arqueira
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Tornado
 a928404f4d5b1e15974a12a7e760b134 Assembly-CSharp.dll:Completed.Loader
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.PlayerSummon
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -133,6 +136,7 @@ e9bdabf9265d758d56f01bb188916fa8 UnityEngine.Networking.dll:UnityEngine.Networki
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.PlayModeRunnerCallback
 5f2ad81aa8994e8fbe25d1e57afe6773 UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.PlaymodeTestsController
 64eb32cc721b1cc68a91ed57461e188c UnityEngine.TestRunner.dll:UnityEngine.TestTools.TestRunner.Callbacks.RemoteTestResultSender
+57ce92651050cea21b90417d0d0b8442 Assembly-CSharp.dll:.Fogo
 25365ec66501498d52d11616553a9368 Assembly-CSharp.dll:.Readme
 bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.AudioSpatializerMicrosoft
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.HoloLens.dll:UnityEngine.EventSystems.HoloLensInput
@@ -140,11 +144,10 @@ bc68edb0af574bf79f9550ead8ebae5c UnityEngine.HoloLens.dll:UnityEngine.Audio.Audi
 c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingCollider
 45f3431f0103c41611e8d4eec3d439df UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.SpatialMappingRenderer
 e991593f0a1422ceadf14496b3a14754 Assembly-CSharp.dll:Completed.SelectArea
-9fa2356e8898065ff7128abac5a06041 Assembly-CSharp.dll:.Tanque
+8ba1708084536c9a2913b15ecaa2130c Assembly-CSharp.dll:.Tanque
 92460f1765746513cbffd350f5d2e90c Assembly-CSharp.dll:Completed.Wall
 7d3a93a61705f82a4092ed178bb721b9 Assembly-CSharp.dll:Completed.GameManager
 24ac7fa068cd1cd6a9b4b7f6868043b6 Assembly-CSharp.dll:.TutorialInfo
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.Flecha
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.SummonArea
-9fa2356e8898065ff7128abac5a06041 Assembly-CSharp.dll:Completed.Enemy
-57ce92651050cea21b90417d0d0b8442 Assembly-CSharp.dll:.Fogo
+8ba1708084536c9a2913b15ecaa2130c Assembly-CSharp.dll:Completed.Enemy

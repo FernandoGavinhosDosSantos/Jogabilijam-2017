@@ -41,12 +41,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7d59e4dfb9c9404b9471de0c983feac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boitataIni: {x: 0, y: 0, z: 0}
+  fireOrigin: {x: 0, y: 0, z: 0}
+  initialFlame: {fileID: 0}
   player: {fileID: 0}
   mainCamera: {fileID: 0}
   waitAnimation: 0
   win: 0
-  columns: 4
-  rows: 3
+  columns: 5
+  rows: 4
   levelStartDelay: 2
   turnDelay: 0.1
   playerFoodPoints: 100
@@ -68,41 +71,57 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fff182172d726402b9e9eacdb89c9724, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Highlight: {fileID: 1763906841060668, guid: 9155674a23a94dd4194a45b3085f3d04, type: 2}
+  Highlight: {fileID: 0}
   wallCount:
     minimum: 5
     maximum: 9
   foodCount:
     minimum: 1
     maximum: 5
-  exit: {fileID: 110520, guid: cb0f3020bafec423aa31d0e491c4b811, type: 2}
-  floorTiles: {fileID: 1475182724023696, guid: 0a167ff92382e134e98b6c9ae22da12d, type: 2}
+  exit:
+  - {fileID: 110520, guid: 0f600b3afe8af6a468fc09e36e0dc8a2, type: 2}
+  - {fileID: 110520, guid: 1e50d5b950fa1df48a0af560f696d87d, type: 2}
+  - {fileID: 110520, guid: b343f1a7dc306a04f857ac24a04924eb, type: 2}
+  - {fileID: 110520, guid: 4bee3b3c399cd4744a9aa6084be4b4fa, type: 2}
+  - {fileID: 110520, guid: cb0f3020bafec423aa31d0e491c4b811, type: 2}
+  floorTiles:
+  - {fileID: 1755641955374596, guid: 43aee8348c8c86047bde55b2c89d38fb, type: 2}
+  - {fileID: 1403911308428918, guid: f858a5a173d81b74c842b20058fb8c9e, type: 2}
+  - {fileID: 1772091198119288, guid: 721073eecbd02ee408ef6fde32ec68a4, type: 2}
+  - {fileID: 1754357246027082, guid: 78e7894ebfb7322408683fea8b43584d, type: 2}
+  - {fileID: 1392632076157008, guid: 1afd362e3e8166a41b7023fa12b80481, type: 2}
+  - {fileID: 1896151642175388, guid: 8c15f73730829014a9b5ab1d921bd2c1, type: 2}
   wallTiles:
-  - {fileID: 110520, guid: 2570048905bd94d6f8a99d13b80daf90, type: 2}
-  - {fileID: 110520, guid: b86334000bc0f47ba8dd33ea88cfcdb1, type: 2}
-  - {fileID: 110520, guid: 01ca47a83ebe24ca5a2f6b1d6dcd7481, type: 2}
-  - {fileID: 110520, guid: 022eda2f1f0cb45e28ff6840b68928bc, type: 2}
-  - {fileID: 110520, guid: e1816487b15cd4c5fbd9587521e068ca, type: 2}
-  - {fileID: 110520, guid: 5ddc2d7828b2d462286f09274199ad9a, type: 2}
-  - {fileID: 110520, guid: 64139c47b57e34c5fa97fd79f8d25244, type: 2}
-  - {fileID: 110520, guid: 741804431f4d341cdae1f15b3896aeff, type: 2}
+  - {fileID: 1664996723958292, guid: a5b5ada97fc23554b93143e3c3f3f1bf, type: 2}
+  - {fileID: 1203209215634950, guid: 2d465591715c180409c7b9e1f16e6536, type: 2}
+  - {fileID: 1362751748310890, guid: d8cc75bef0a777b499b6f7504755951f, type: 2}
+  - {fileID: 1979929701223586, guid: 309d6bd3d0ab5394691f851dfcf9accd, type: 2}
   foodTiles:
-  - {fileID: 110520, guid: ad25a4e752915438e9f55a35bedacf1f, type: 2}
-  - {fileID: 110520, guid: 46e8bf4bf645a47e3ae1b60c7e18418c, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
   enemyTiles:
   - {fileID: 161064, guid: 089a2f2c322ea40f9afdfaba0550c6d3, type: 2}
   - {fileID: 195068, guid: ebfba08a213d34c46ba2b1947aeaea83, type: 2}
   - {fileID: 1153927505020632, guid: 95f15a13dd8e2754a82f094db6c0eff6, type: 2}
   outerWallTiles:
-  - {fileID: 110520, guid: 7094f72151ec74f569c4e03f1ec0f8e7, type: 2}
-  - {fileID: 110520, guid: b0ace21a29149403094422fb3bd96aa9, type: 2}
-  - {fileID: 110520, guid: e85c94355cc4641da919bd5d0ac956d4, type: 2}
+  - {fileID: 1886839479786660, guid: c4c7c5940fc302c40856b2560d58d066, type: 2}
+  - {fileID: 1974317737355682, guid: aeab33ec8cbc09943944c6a4e12b4e1f, type: 2}
+  - {fileID: 1276407039173514, guid: f4df58b8067ff2148a16edcd226474e8, type: 2}
   SummonTiles:
-  - {fileID: 1568982026971482, guid: 6a7bef05380d3254e8be166f51943e05, type: 2}
+  - {fileID: 1568982026971482, guid: a5848c3aa9f3f1542ba229471ff3dfed, type: 2}
   - {fileID: 110520, guid: 997613769ba577746bdcb9a455e829b1, type: 2}
-  - {fileID: 1026999265894990, guid: d9455450e84227c4fad2cb6b246901e0, type: 2}
+  - {fileID: 1026999265894990, guid: a87148ade1d45e34d97151012a0ba651, type: 2}
   - {fileID: 1665499910174882, guid: f7059b12af1e80446918bd69b6182b4e, type: 2}
   - {fileID: 1460986569078178, guid: b7a0fdd39045fdd4080d9aafe22d90a5, type: 2}
+  SpecialTiles:
+  - {fileID: 1568982026971482, guid: fa575d38ee3777241888dcaabce0390a, type: 2}
+  - {fileID: 110520, guid: 4a478f6c06666d445b468618a0b8a5be, type: 2}
+  - {fileID: 110520, guid: 1a54d8c66492c6340b4b1bd18756e071, type: 2}
+  - {fileID: 110520, guid: bdf20f7cd44d851468798aefaa69f3d6, type: 2}
+  - {fileID: 1026999265894990, guid: 14249d29d09414e4293755d4e9800c7b, type: 2}
+  - {fileID: 110520, guid: 6b1c96238ab5cea4a9ba76e93426a5ed, type: 2}
+  - {fileID: 1665499910174882, guid: d0cb3346288bbb64b8c8f5e993ba2d6c, type: 2}
+  - {fileID: 110520, guid: 0dc627d3d40ed09478549581737f7df9, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

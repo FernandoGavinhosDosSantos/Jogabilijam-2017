@@ -10,8 +10,6 @@ TagManager:
   - Soda
   - Ally
   - CorpoSeco
-  - Wall
-  - Fire
   layers:
   - Default
   - TransparentFX
@@ -23,7 +21,7 @@ TagManager:
   - 
   - BlockingLayer
   - Parede
-  - Highlight
+  - 
   - 
   - 
   - 
@@ -52,12 +50,15 @@ TagManager:
   - name: Floor
     uniqueID: 3131993583
     locked: 0
+  - name: Summons
+    uniqueID: 3254279687
+    locked: 0
   - name: Items
     uniqueID: 1861650685
     locked: 0
   - name: Units
     uniqueID: 3393972251
     locked: 0
-  - name: Summons
-    uniqueID: 3254279687
+  - name: OuterWalls
+    uniqueID: 2530546123
     locked: 0

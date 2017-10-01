@@ -34,13 +34,14 @@ namespace Completed
         private void Update()
         {
             Delay += Time.deltaTime;
-			if(Delay <= 0.2) return;
+            if (Delay <= 0.2) return;
 
             if (Input.GetAxis("Confirm") > 0)
             {
                 GameObject summon = GameManager.instance.boardScript.Summon(GameManager.instance.summonId, transform.position);
                 if (summon)
                 {
+                    GameManager.instance.player.setAnimation("playerSumm", false);
                     Player.selecionando = false;
                     if (GameManager.instance.summonId == GameManager.BOITATA)
                     {
@@ -50,6 +51,8 @@ namespace Completed
                     if (GameManager.instance.summonId == GameManager.IARA) GameManager.instance.IarasCharm(3, summon);
                     if (GameManager.instance.summonId == GameManager.CORPO_SECO) GameManager.instance.levelSettings[(int)Mathf.Round(transform.position.x), (int)Mathf.Round(transform.position.y)] = 'S';
                     GameManager.instance.playersTurn = false;
+
+                    SoundManager.instance.PlaySinglePlayer(GameManager.instance.player.SummonSounds[GameManager.instance.summonId]);
                     GameManager.instance.summonId = -1;
                     GameManager.instance.player.loseMana(1);
                     Destroy(gameObject);
@@ -57,6 +60,7 @@ namespace Completed
             }
             if (Input.GetAxis("Cancel") > 0)
             {
+                GameManager.instance.player.setAnimation("playerSumm", false);
                 GameManager.instance.activeSummons[GameManager.instance.summonId] = false;
                 Player.selecionando = false;
                 GameManager.instance.summonId = -1;
@@ -124,7 +128,7 @@ namespace Completed
             //Check if we have a non-zero value for horizontal or vertical
             if (horizontal != 0 || vertical != 0)
             {
-                    AttemptMove(horizontal, vertical);
+                AttemptMove(horizontal, vertical);
             }
         }
 

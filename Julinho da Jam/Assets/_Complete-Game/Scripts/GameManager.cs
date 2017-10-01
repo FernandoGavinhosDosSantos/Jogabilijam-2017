@@ -28,7 +28,7 @@ namespace Completed
         public const int IARA = 3;
         public const int S_AREA = 4;
 
-        public float levelStartDelay = 2f;                      //Time to wait before starting level, in seconds.
+        public float levelStartDelay = 1f;                      //Time to wait before starting level, in seconds.
         public float turnDelay = 0.1f;                          //Delay between each Player turn.
         public int playerFoodPoints = 100;                      //Starting value for Player food points.
         public static GameManager instance = null;              //Static instance of GameManager which allows it to be accessed by any other script.
@@ -86,10 +86,13 @@ namespace Completed
         //This is called each time a scene is loaded.
         static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
-            if(GameManager.instance.win) instance.level++;
-            GameManager.instance.win = false;
-            GameManager.instance.activeSummons = new bool[] { false, false, false, false };
-            instance.InitGame();
+            if (GameManager.instance != null)
+            {
+                if (GameManager.instance.win) instance.level++;
+                GameManager.instance.win = false;
+                GameManager.instance.activeSummons = new bool[] { false, false, false, false };
+                instance.InitGame();
+            }
         }
 
 

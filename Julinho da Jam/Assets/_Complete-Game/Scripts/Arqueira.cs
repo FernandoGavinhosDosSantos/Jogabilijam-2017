@@ -94,7 +94,7 @@ public class Arqueira : Enemy {
         if (hasArrow && isPlayerUnderAim > 0)
         {
             isPlayerUnderAim = 0;
-
+            animator.SetTrigger("enemyAttack");
             aInstance.Shoot(this, aimLocation);
         } else if (!hasArrow) Reload();
     }

@@ -10,16 +10,20 @@ namespace Completed
     //Player inherits from MovingObject, our base class for objects that can move, Enemy also inherits from this.
     public class Player : MovingObject
     {
+        public bool mudaMusica;
         public Camera MainCamera;
         public GameObject[] HudVidas;
+        public GameObject[] hudTuto;
         public int vidas = 3;
         public GameObject[] HudMana;
         public int mana = 3;
         public bool[] unlockedSummons = { false, false, false, false };
+        public bool controlEnabled = true;
 
         public static bool selecionando = false;
         public GameObject Marca;
         public Queue<Fogo> fire;
+        public SpriteRenderer playerSprite;
 
         public float restartLevelDelay = 1f;        //Delay time in seconds to restart level.
         public int wallDamage = 1;                  //How much damage a player does to a wall when chopping it.
@@ -30,6 +34,8 @@ namespace Completed
         public AudioClip drinkSound1;               //1 of 2 Audio clips to play when player collects a soda object.
         public AudioClip drinkSound2;               //2 of 2 Audio clips to play when player collects a soda object.
         public AudioClip gameOverSound;             //Audio clip to play when player dies.
+        public AudioClip[] SummonSounds;            //Audio clip to play when player dies.
+        public AudioClip victorySound;              //Audio clip to play when player dies.
 
         private Animator animator;					//Used to store a reference to the Player's animator component.
 
@@ -74,11 +80,17 @@ namespace Completed
         //Start overrides the Start function of MovingObject
         protected override void Start()
         {
+            hudTuto[0].SetActive(false);
+            hudTuto[1].SetActive(false);
+            hudTuto[2].SetActive(false);
+            hudTuto[3].SetActive(false);
+
             id = 'P';
 
             //Get a component reference to the Player's animator component
             animator = GetComponent<Animator>();
             fire = new Queue<Fogo>();
+            playerSprite = GetComponent<SpriteRenderer>();
 
             GameManager.instance.PlayerSetup(this, this.MainCamera);
 
@@ -92,9 +104,68 @@ namespace Completed
             base.Start();
         }
 
+        public void ligaTutorial()
+        {
+            if (vidas > 0)
+            {
+                if (GameManager.instance.level == 2)
+                {
+                    hudTuto[0].SetActive(true);
+                    controlEnabled = false;
+                }
+                if (GameManager.instance.level == 4)
+                {
+                    hudTuto[1].SetActive(true);
+                    controlEnabled = false;
+                }
+                if (GameManager.instance.level == 6)
+                {
+                    hudTuto[2].SetActive(true);
+                    controlEnabled = false;
+                }
+                if (GameManager.instance.level == 8)
+                {
+                    hudTuto[3].SetActive(true);
+                    controlEnabled = false;
+                }
+            }
+        }
 
         private void Update()
         {
+            if (!mudaMusica && GameManager.instance.level > 9)
+            {
+                SoundManager.instance.musicSource.Stop();
+                SoundManager.instance.oneHeartMusicSource.Stop();
+                SoundManager.instance.levelTenMusicSource.Play();
+
+                mudaMusica = true;
+            }
+            if (!mudaMusica && GameManager.instance.level <= 9)
+            {
+                SoundManager.instance.levelTenMusicSource.Stop();
+                SoundManager.instance.musicSource.Play();
+                SoundManager.instance.oneHeartMusicSource.Play();
+
+                mudaMusica = true;
+            }
+
+            if (vidas == 1)
+            {
+                if (SoundManager.instance.musicSource.volume > 0)
+                    SoundManager.instance.musicSource.volume -= 0.5f * Time.deltaTime;
+
+                if (SoundManager.instance.oneHeartMusicSource.volume < 0.1f)
+                    SoundManager.instance.oneHeartMusicSource.volume += 0.5f * Time.deltaTime;
+            }
+            else if (vidas > 1)
+            {
+                if (SoundManager.instance.oneHeartMusicSource.volume > 0)
+                    SoundManager.instance.oneHeartMusicSource.volume -= 0.5f * Time.deltaTime;
+
+                if (SoundManager.instance.musicSource.volume < 0.25f)
+                    SoundManager.instance.musicSource.volume += 0.5f * Time.deltaTime;
+            }
             //If it's not the player's turn, exit the function.
             if (!GameManager.instance.playersTurn || GameManager.instance.waitAnimation) return;
 
@@ -104,33 +175,49 @@ namespace Completed
             //Check if we are running either in the Unity editor or in a standalone build.
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
 
-            if (Input.GetAxis("Restart") > 0)
+            if (controlEnabled)
             {
-                if (GameManager.instance.level >= 9) GameManager.instance.level = 1;
-                else GameManager.instance.level++;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                if (Input.GetAxis("Restart") > 0)
+                {
+                    if (GameManager.instance.level >= 10) GameManager.instance.level = 1;
+                    else GameManager.instance.level++;
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+                if (Input.GetAxis("Restart") < 0)
+                {
+                    if (GameManager.instance.level <= 1) GameManager.instance.level = 10;
+                    else GameManager.instance.level--;
+                    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                }
+                if (Input.GetAxis("Saci") > 0 && !selecionando && unlockedSummons[GameManager.SACI])
+                {
+                    Summon(saciSummonArea, GameManager.SACI, false);
+                }
+                if (Input.GetAxis("CorpoSeco") > 0 && !selecionando && unlockedSummons[GameManager.CORPO_SECO])
+                {
+                    Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
+                }
+                if (Input.GetAxis("Boitata_Iara") > 0 && !selecionando && unlockedSummons[GameManager.BOITATA])
+                {
+                    Summon(boitataSummonArea, GameManager.BOITATA, true);
+                }
+                if (Input.GetAxis("Boitata_Iara") < 0 && !selecionando && unlockedSummons[GameManager.IARA])
+                {
+                    Summon(iaraSummonArea, GameManager.IARA, true);
+                }
             }
-            if (Input.GetAxis("Restart") < 0)
+
+            else if (Input.GetAxis("Confirm") > 0 || Input.GetAxis("Cancel") > 0)
             {
-                if (GameManager.instance.level <= 1) GameManager.instance.level = 9;
-                else GameManager.instance.level--;
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-            if (Input.GetAxis("Saci") > 0 && !selecionando && unlockedSummons[GameManager.SACI])
-            {
-                Summon(saciSummonArea, GameManager.SACI, false);
-            }
-            if (Input.GetAxis("CorpoSeco") > 0 && !selecionando && unlockedSummons[GameManager.CORPO_SECO])
-            {
-                Summon(corpoSecoSummonArea, GameManager.CORPO_SECO, true);
-            }
-            if (Input.GetAxis("Boitata_Iara") > 0 && !selecionando && unlockedSummons[GameManager.BOITATA])
-            {
-                Summon(boitataSummonArea, GameManager.BOITATA, true);
-            }
-            if (Input.GetAxis("Boitata_Iara") < 0 && !selecionando && unlockedSummons[GameManager.IARA])
-            {
-                Summon(iaraSummonArea, GameManager.IARA, true);
+                hudTuto[0].SetActive(false);
+                hudTuto[1].SetActive(false);
+                hudTuto[2].SetActive(false);
+                hudTuto[3].SetActive(false);
+
+                controlEnabled = true;
+
+                GameManager.instance.win = true;
+                invokeRestart();
             }
 
             //Get input from the input manager, round it to an integer and store in horizontal to set x axis move direction
@@ -142,6 +229,7 @@ namespace Completed
             //Check if moving horizontally, if so set vertical to zero.
             if (horizontal != 0)
             {
+                playerSprite.flipX = (horizontal < 0);
                 vertical = 0;
             }
             //Check if we are running on iOS, Android, Windows Phone 8 or Unity iPhone
@@ -192,7 +280,9 @@ namespace Completed
                 int x = (int)Math.Round(transform.position.x) + horizontal;
                 int y = (int)Math.Round(transform.position.y) + vertical;
 
-                if (selecionando == false && GameManager.instance.levelSettings[x, y] != 'W')
+                bool inRange = (x >= 0 && x < GameManager.instance.levelSettings.GetLength(0) && y >= 0 && y < GameManager.instance.levelSettings.GetLength(1));
+
+                if (selecionando == false && inRange && GameManager.instance.levelSettings[x, y] != 'W')
                 {
                     AttemptMove<Enemy>(horizontal, vertical);
 
@@ -201,10 +291,21 @@ namespace Completed
             }
         }
 
+        public void setAnimation(string anim)
+        {
+            animator.SetTrigger(anim);
+        }
+
+        public void setAnimation(string anim, bool status)
+        {
+            animator.SetBool(anim, status);
+        }
+
         private void Summon(int[,] summonArea, int summonId, bool excecao)
         {
             if (mana > 0 && !selecionando && (!GameManager.instance.activeSummons[summonId] || excecao))
             {
+                setAnimation("playerSumm", true);
                 selecionando = true;
                 if (summonId == GameManager.IARA) GameManager.instance.activeSummons[summonId] = true;
                 GameManager.instance.summonId = summonId;
@@ -286,11 +387,16 @@ namespace Completed
             //Check if the tag of the trigger collided with is Exit.
             if (other.tag == "Exit")
             {
-                GameManager.instance.win = true;
+                SoundManager.instance.PlaySinglePlayer(victorySound);
 
-                invokeRestart();
+                if (GameManager.instance.level == 2 || GameManager.instance.level == 4 || GameManager.instance.level == 6 || GameManager.instance.level == 8)
+                    ligaTutorial();
+                else
+                {
+                    GameManager.instance.win = true;
+                    invokeRestart();
+                }
             }
-
         }
 
 
@@ -300,8 +406,17 @@ namespace Completed
             //Load the last scene loaded, in this case Main, the only scene in the game. And we load it in "Single" mode so it replace the existing one
             //and not load all the scene object in the current scene.
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
-        }
 
+            if (GameManager.instance.level <= 9)
+            {
+                //Stop the background music.
+                SoundManager.instance.musicSource.volume = 0.5f;
+                SoundManager.instance.oneHeartMusicSource.volume = 0f;
+                SoundManager.instance.musicSource.Play();
+                SoundManager.instance.oneHeartMusicSource.Play();
+                SoundManager.instance.musicSource.Stop();
+            }
+        }
 
         //LoseFood is called when an enemy attacks the player.
         //It takes a parameter loss which specifies how many points to lose.
@@ -321,6 +436,8 @@ namespace Completed
             }
             else if (vidas == 1)
             {
+                //SoundManager.instance.musicSource.volume = 0f;
+                //SoundManager.instance.oneHeartMusicSource.volume = 0.1f;
                 HudVidas[1].SetActive(false);
             }
             else if (vidas == 0)
@@ -364,9 +481,8 @@ namespace Completed
         //CheckIfGameOver checks if the player is out of food points and if so, ends the game.
         private void CheckIfGameOver()
         {
-
             //Call the PlaySingle function of SoundManager and pass it the gameOverSound as the audio clip to play.
-            SoundManager.instance.PlaySingle(gameOverSound);
+            SoundManager.instance.PlaySinglePlayer(gameOverSound);
 
             //Stop the background music.
             SoundManager.instance.musicSource.Stop();

@@ -5,9 +5,12 @@ namespace Completed
 {
 	public class SoundManager : MonoBehaviour 
 	{
-		public AudioSource efxSource;					//Drag a reference to the audio source which will play the sound effects.
-		public AudioSource musicSource;					//Drag a reference to the audio source which will play the music.
-		public static SoundManager instance = null;		//Allows other scripts to call functions from SoundManager.				
+		public AudioSource efxSource;                   //Drag a reference to the audio source which will play the sound effects.
+		public AudioSource playerEfxSource;                   //Drag a reference to the audio source which will play the sound effects.
+        public AudioSource musicSource;                 //Drag a reference to the audio source which will play the music.
+        public AudioSource oneHeartMusicSource;         //Drag a reference to the audio source which will play the music.
+        public AudioSource levelTenMusicSource;         //Drag a reference to the audio source which will play the music.
+        public static SoundManager instance = null;		//Allows other scripts to call functions from SoundManager.				
 		public float lowPitchRange = .95f;				//The lowest a sound effect will be randomly pitched.
 		public float highPitchRange = 1.05f;			//The highest a sound effect will be randomly pitched.
 		
@@ -27,7 +30,6 @@ namespace Completed
 			DontDestroyOnLoad (gameObject);
 		}
 		
-		
 		//Used to play single sound clips.
 		public void PlaySingle(AudioClip clip)
 		{
@@ -38,6 +40,15 @@ namespace Completed
 			efxSource.Play ();
 		}
 		
+		//Used to play single sound clips.
+		public void PlaySinglePlayer(AudioClip clip)
+		{
+			//Set the clip of our efxSource audio source to the clip passed in as a parameter.
+			playerEfxSource.clip = clip;
+			
+			//Play the clip.
+			playerEfxSource.Play ();
+		}
 		
 		//RandomizeSfx chooses randomly between various audio clips and slightly changes their pitch.
 		public void RandomizeSfx (params AudioClip[] clips)

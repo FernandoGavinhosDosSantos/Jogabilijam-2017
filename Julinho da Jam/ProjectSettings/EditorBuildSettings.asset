@@ -6,5 +6,14 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/_Complete-Game/_Complete-Game.unity
+    path: Assets/_Complete-Game/Scenes/Menu.unity
+    guid: ccee562afbedb7144b15af4b62bf9a16
+  - enabled: 1
+    path: Assets/_Complete-Game/Scenes/Selection.unity
+    guid: 72bbe95dfebf70142b48bf82ea48486f
+  - enabled: 1
+    path: Assets/_Complete-Game/Scenes/_Complete-Game.unity
     guid: 72d362146ea8845739db4749fdcbe96d
+  - enabled: 1
+    path: Assets/_Complete-Game/Scenes/Credits.unity
+    guid: b66ea3e19476fa24783869511065a2f9

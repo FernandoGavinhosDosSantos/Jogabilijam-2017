@@ -26,8 +26,8 @@ public class Lanceiro : Enemy
             float lX = Mathf.Round(transform.position.x);
             float lY = Mathf.Round(transform.position.y);
 
-            if (leftTurned && pY == lY && pX == lX - 1) GameManager.instance.player.LoseFood(1);
-            if (!leftTurned && pY == lY && pX == lX + 1) GameManager.instance.player.LoseFood(1);
+            if (rightTurned && pY == lY && pX == lX + 1) GameManager.instance.player.LoseFood(1);
+            if (!rightTurned && pY == lY && pX == lX - 1) GameManager.instance.player.LoseFood(1);
         }
 
         base.Damage(dmg,reaction);
